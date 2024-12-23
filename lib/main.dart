@@ -1,9 +1,17 @@
+import 'package:ai_chatbot/feature/init_dependencies.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'feature/chat/presentation/bloc/chat_bloc.dart';
 import 'feature/chat/presentation/pages/chat_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  initDependency();
+  runApp(BlocProvider(
+    create: (context) => serviceLocator<ChatBloc>(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

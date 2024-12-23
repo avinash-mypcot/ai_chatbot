@@ -41,26 +41,22 @@ class ChatModel {
 class Candidates {
   final Content? content;
   final String? finishReason;
-  final CitationMetadata? citationMetadata;
   final double? avgLogprobs;
 
   Candidates({
     this.content,
     this.finishReason,
-    this.citationMetadata,
     this.avgLogprobs,
   });
 
   Candidates copyWith({
     Content? content,
     String? finishReason,
-    CitationMetadata? citationMetadata,
     double? avgLogprobs,
   }) {
     return Candidates(
       content: content ?? this.content,
       finishReason: finishReason ?? this.finishReason,
-      citationMetadata: citationMetadata ?? this.citationMetadata,
       avgLogprobs: avgLogprobs ?? this.avgLogprobs,
     );
   }
@@ -70,17 +66,11 @@ class Candidates {
             ? Content.fromJson(json['content'] as Map<String, dynamic>)
             : null,
         finishReason = json['finishReason'] as String?,
-        citationMetadata =
-            (json['citationMetadata'] as Map<String, dynamic>?) != null
-                ? CitationMetadata.fromJson(
-                    json['citationMetadata'] as Map<String, dynamic>)
-                : null,
         avgLogprobs = json['avgLogprobs'] as double?;
 
   Map<String, dynamic> toJson() => {
         'content': content?.toJson(),
         'finishReason': finishReason,
-        'citationMetadata': citationMetadata?.toJson(),
         'avgLogprobs': avgLogprobs
       };
 }
@@ -116,79 +106,28 @@ class Content {
 
 class Parts {
   final String? text;
+  final bool? isUser;
 
   Parts({
     this.text,
+    this.isUser,
   });
 
   Parts copyWith({
     String? text,
+    bool? isUser,
   }) {
     return Parts(
       text: text ?? this.text,
+      isUser: isUser ?? this.isUser,
     );
   }
 
-  Parts.fromJson(Map<String, dynamic> json) : text = json['text'] as String?;
+  Parts.fromJson(Map<String, dynamic> json)
+      : text = json['text'] as String?,
+        isUser = json['isUser'] as bool?;
 
-  Map<String, dynamic> toJson() => {'text': text};
-}
-
-class CitationMetadata {
-  final List<CitationSources>? citationSources;
-
-  CitationMetadata({
-    this.citationSources,
-  });
-
-  CitationMetadata copyWith({
-    List<CitationSources>? citationSources,
-  }) {
-    return CitationMetadata(
-      citationSources: citationSources ?? this.citationSources,
-    );
-  }
-
-  CitationMetadata.fromJson(Map<String, dynamic> json)
-      : citationSources = (json['citationSources'] as List?)
-            ?.map((dynamic e) =>
-                CitationSources.fromJson(e as Map<String, dynamic>))
-            .toList();
-
-  Map<String, dynamic> toJson() =>
-      {'citationSources': citationSources?.map((e) => e.toJson()).toList()};
-}
-
-class CitationSources {
-  final int? startIndex;
-  final int? endIndex;
-  final String? uri;
-
-  CitationSources({
-    this.startIndex,
-    this.endIndex,
-    this.uri,
-  });
-
-  CitationSources copyWith({
-    int? startIndex,
-    int? endIndex,
-    String? uri,
-  }) {
-    return CitationSources(
-      startIndex: startIndex ?? this.startIndex,
-      endIndex: endIndex ?? this.endIndex,
-      uri: uri ?? this.uri,
-    );
-  }
-
-  CitationSources.fromJson(Map<String, dynamic> json)
-      : startIndex = json['startIndex'] as int?,
-        endIndex = json['endIndex'] as int?,
-        uri = json['uri'] as String?;
-
-  Map<String, dynamic> toJson() =>
-      {'startIndex': startIndex, 'endIndex': endIndex, 'uri': uri};
+  Map<String, dynamic> toJson() => {'text': text, 'isUser': isUser};
 }
 
 class UsageMetadata {

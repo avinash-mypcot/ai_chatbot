@@ -8,9 +8,9 @@ class HomeRepository {
       : _services = service,
         super();
 
-  Future<ChatModel> getInformation() async {
+  Future<ChatModel> getInformation(String key ,Map<String,dynamic> massage) async {
     try {
-      return _services.getInformation();
+      return _services.getInformation( key,massage);
     } catch (e) {
       rethrow;
     }
