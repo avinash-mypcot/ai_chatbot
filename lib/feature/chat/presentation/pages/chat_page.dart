@@ -1,10 +1,11 @@
 import 'package:ai_chatbot/core/theme/app_colors.dart';
+import 'package:ai_chatbot/core/theme/textstyles.dart';
 import 'package:ai_chatbot/feature/chat/presentation/bloc/chat_bloc.dart';
 import 'package:ai_chatbot/feature/chat/presentation/widgets/massege_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-
 import '../widgets/bottom_box_widget.dart';
 
 class ChatPage extends StatefulWidget {
@@ -24,8 +25,7 @@ class Message {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _userInput = TextEditingController();
-  final ScrollController _scrollController =
-      ScrollController(); // Add ScrollController
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
@@ -51,6 +51,16 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.kColorGrey,
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        backgroundColor: AppColors.kColorBlack.withValues(alpha: 0.9),
+        title: Text(
+          "AI Chat",
+          style: kTextStylePoppins400.copyWith(
+              fontSize: 16.sp, color: AppColors.kColorWhite),
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -63,7 +73,7 @@ class _ChatPageState extends State<ChatPage> {
                   BlendMode.dstATop,
                 ),
                 image: AssetImage('assets/images/back_img.jpg'),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),

@@ -4,9 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'feature/chat/presentation/bloc/chat_bloc.dart';
 import 'feature/chat/presentation/pages/chat_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   initDependency();
   runApp(BlocProvider(
     create: (context) => serviceLocator<ChatBloc>(),

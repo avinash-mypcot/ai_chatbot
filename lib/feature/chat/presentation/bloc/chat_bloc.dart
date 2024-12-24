@@ -2,6 +2,7 @@ import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../data/repository/chat_repository.dart';
+import '../../data/services/firebase_service.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -51,6 +52,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             ...response.candidates![0].content!.parts!,
           ]))
         ]);
+          // Store updatedModel in Firebase before emitting the state
+        await storeChatModelToFirestore(updatedModel);
         emit(ChatLoaded(data: updatedModel));
       } else {
         emit(ChatLoaded(data: response));
