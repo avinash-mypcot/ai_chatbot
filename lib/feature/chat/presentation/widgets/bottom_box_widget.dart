@@ -129,11 +129,15 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                           BorderSide(color: AppColors.kColorWhite, width: 1.0),
                       borderRadius: BorderRadius.circular(20.r),
                     ),
-                    label: Text(
-                      'Enter Your Message',
-                      style: kTextStylePoppins300.copyWith(
-                          height: 1, color: AppColors.kColorWhite),
-                    ),
+                    hintText: 'Enter Your Message',
+                    hintStyle: kTextStylePoppins300.copyWith(
+                        height: 1, color: AppColors.kColorWhite),
+
+                    // label: Text(
+                    //   'Enter Your Message',
+                    //   style: kTextStylePoppins300.copyWith(
+                    //       height: 1, color: AppColors.kColorWhite),
+                    // ),
                   ),
                 ),
                 Positioned(

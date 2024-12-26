@@ -1,20 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import '../model/chat_model.dart';
 
-Future<void> storeChatModelToFirestore(ChatModel chatModel) async {
+Future<void> appendPartsToFirestore(ChatModel chatModel) async {
   try {
     // Initialize Firestore instance
     final firestore = FirebaseFirestore.instance;
 
-    // Convert ChatModel to JSON
-    Map<String, dynamic> chatModelJson = chatModel.toJson();
+    // Get today's date in 'yyyy-MM-dd' format for document ID
+    String documentId = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    // Save to Firestore
-    await firestore.collection('chatModels').add(chatModelJson);
+    // Extract the parts to be appended
+    List<dynamic> newParts = chatModel.candidates!
+        .expand((candidate) => candidate.content?.parts ?? [])
+        .map((part) => part.toJson())
+        .toList();
 
-    print("ChatModel data successfully stored in Firestore!");
+    // Reference the document
+    final docRef = firestore.collection('chatModels').doc(documentId);
+
+    // Check if the document exists
+    final docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) {
+      // Append new parts to the existing parts in Firestore
+      await docRef.update({
+        'chats.0.candidates.0.content.parts': FieldValue.arrayUnion(newParts),
+      });
+    } else {
+      // If document does not exist, create it
+      await docRef.set({
+        'chats': [chatModel.toJson()],
+        'date': DateTime.now(),
+      });
+    }
+
+    print("Parts successfully appended to Firestore!");
   } catch (e) {
-    print("Error storing ChatModel data: $e");
+    print("Error appending parts to Firestore: $e");
   }
 }

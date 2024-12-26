@@ -52,8 +52,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             ...response.candidates![0].content!.parts!,
           ]))
         ]);
-          // Store updatedModel in Firebase before emitting the state
-        await storeChatModelToFirestore(updatedModel);
+        // Store updatedModel in Firebase before emitting the state
+        await appendPartsToFirestore(updatedModel);
         emit(ChatLoaded(data: updatedModel));
       } else {
         emit(ChatLoaded(data: response));
