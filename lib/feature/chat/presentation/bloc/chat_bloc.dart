@@ -1,6 +1,8 @@
 import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import '../../data/repository/chat_repository.dart';
 import '../../data/services/firebase_service.dart';
 
@@ -11,7 +13,36 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   HomeRepository repository;
   ChatBloc({required this.repository}) : super(ChatInitial()) {
     on<ChatRequest>(_onMassageRequest);
+    on<ChatHistory>(_onSetHistoryRequest);
+    on<GetTodayChat>(_onGetTodayChat);
   }
+  _onGetTodayChat(GetTodayChat event, Emitter<ChatState> emit) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('chatModels')
+        .doc(DateFormat('yyyy-MM-dd').format(DateTime.now()))
+        .get();
+    var data = snapshot.data();
+
+    dynamic content1 = data!['chats'].runtimeType == List
+        ? data['chats'][0]['candidates'][0]['content']
+        : data['chats']['0']['candidates']['0']['content'];
+    var content = Content.fromJson(content1);
+
+    List<Parts> parts = content.parts ?? [];
+    final dateTime = (data['date'] as Timestamp).toDate();
+    final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+    final model = ChatModel(
+      candidates: [
+        Candidates(content: Content(parts: parts), date: formattedDate)
+      ],
+    );
+    emit(ChatLoaded(data: model));
+  }
+
+  _onSetHistoryRequest(ChatHistory event, Emitter<ChatState> emit) async {
+    emit(ChatLoaded(data: event.model));
+  }
+
   _onMassageRequest(ChatRequest event, Emitter<ChatState> emit) async {
     Map<String, dynamic> body = {
       "contents": [

@@ -5,17 +5,27 @@ final serviceLocator = GetIt.instance;
 Future<void> initDependency() async {
   serviceLocator.registerLazySingleton(() => Dio());
   _initChat();
+  _initHistory();
+}
+
+_initHistory() {
+  serviceLocator
+    ..registerLazySingleton(() => HistoryApi())
+    ..registerLazySingleton(
+        () => HistoryServices(api: serviceLocator(), dio: serviceLocator()))
+    ..registerLazySingleton(() => HistoryRepository(service: serviceLocator()))
+    ..registerLazySingleton(() => HistoryBloc(repository: serviceLocator()));
 }
 
 _initChat() {
   serviceLocator
-  //Api
+    //Api
     ..registerLazySingleton(() => ChatApi(serviceLocator()))
-  //Services
+    //Services
     ..registerLazySingleton(
         () => ChatServices(api: serviceLocator(), dio: serviceLocator()))
-  //Repository
+    //Repository
     ..registerFactory(() => HomeRepository(service: serviceLocator()))
-  //Bloc
+    //Bloc
     ..registerLazySingleton(() => ChatBloc(repository: serviceLocator()));
 }

@@ -51,6 +51,12 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void initState() {
+    context.read<ChatBloc>().add(GetTodayChat());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,

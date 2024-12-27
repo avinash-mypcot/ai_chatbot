@@ -42,23 +42,21 @@ class Candidates {
   final Content? content;
   final String? finishReason;
   final double? avgLogprobs;
+  final String? date;
 
-  Candidates({
-    this.content,
-    this.finishReason,
-    this.avgLogprobs,
-  });
+  Candidates({this.content, this.finishReason, this.avgLogprobs, this.date});
 
   Candidates copyWith({
     Content? content,
     String? finishReason,
     double? avgLogprobs,
+    String? date,
   }) {
     return Candidates(
-      content: content ?? this.content,
-      finishReason: finishReason ?? this.finishReason,
-      avgLogprobs: avgLogprobs ?? this.avgLogprobs,
-    );
+        content: content ?? this.content,
+        finishReason: finishReason ?? this.finishReason,
+        avgLogprobs: avgLogprobs ?? this.avgLogprobs,
+        date: date ?? this.date);
   }
 
   Candidates.fromJson(Map<String, dynamic> json)
@@ -66,12 +64,14 @@ class Candidates {
             ? Content.fromJson(json['content'] as Map<String, dynamic>)
             : null,
         finishReason = json['finishReason'] as String?,
-        avgLogprobs = json['avgLogprobs'] as double?;
+        avgLogprobs = json['avgLogprobs'] as double?,
+        date = json['date'] as String?;
 
   Map<String, dynamic> toJson() => {
         'content': content?.toJson(),
         'finishReason': finishReason,
-        'avgLogprobs': avgLogprobs
+        'avgLogprobs': avgLogprobs,
+        'date': date
       };
 }
 
@@ -113,10 +113,7 @@ class Parts {
     this.isUser,
   });
 
-  Parts copyWith({
-    String? text,
-    bool? isUser,
-  }) {
+  Parts copyWith({String? text, bool? isUser, String? date}) {
     return Parts(
       text: text ?? this.text,
       isUser: isUser ?? this.isUser,

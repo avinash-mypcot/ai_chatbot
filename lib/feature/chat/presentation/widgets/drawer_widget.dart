@@ -21,7 +21,7 @@ class DrawerWidget extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(10.r),
                 bottomRight: Radius.circular(10.r)),
-            color: AppColors.kColorBlack.withValues(alpha: 0.8),
+            color: AppColors.kColorBlack.withValues(alpha: 0.85),
             border: Border(
               right: BorderSide(
                 color: AppColors.kColorGrey.withValues(alpha: 0.4),
@@ -38,10 +38,16 @@ class DrawerWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(200.r),
-                  child: Image.network(
-                      'https://www.shutterstock.com/image-vector/vector-flat-illustration-grayscale-avatar-600nw-2264922221.jpg'),
+                child: GestureDetector(
+                  onTap: () {
+                    context.router.push(ProfileRoute());
+                    context.router.maybePop();
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(200.r),
+                    child: Image.network(
+                        'https://www.shutterstock.com/image-vector/vector-flat-illustration-grayscale-avatar-600nw-2264922221.jpg'),
+                  ),
                 ),
               ),
               SizedBox(
@@ -66,11 +72,10 @@ class DrawerWidget extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pop(); // Close the drawer first
-                        Future.delayed(const Duration(milliseconds: 300), () {
-                          // Add a delay for smooth transition
+                        if (context.mounted) {
                           context.router.push(HistoryRoute());
-                        });
+                        }
+                        context.router.maybePop();
                       },
                       child: Container(
                         margin: EdgeInsets.only(left: 12.w),

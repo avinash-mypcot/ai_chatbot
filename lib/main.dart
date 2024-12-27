@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/router/app_router.dart';
 import 'feature/chat/presentation/bloc/chat_bloc.dart';
-import 'feature/chat/presentation/pages/chat_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'feature/history/presentation/bloc/history_bloc.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -14,14 +14,21 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   initDependency();
-  runApp(BlocProvider(
-    create: (context) => serviceLocator<ChatBloc>(),
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (context) => serviceLocator<ChatBloc>(),
+      ),
+      BlocProvider(
+        create: (context) => serviceLocator<HistoryBloc>(),
+      ),
+    ],
     child: MyApp(),
   ));
 }
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
+  MyApp({super.key});
   final _appRouter = AppRouter();
   @override
   Widget build(BuildContext context) {

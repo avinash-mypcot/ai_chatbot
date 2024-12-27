@@ -19,6 +19,7 @@ Future<void> appendPartsToFirestore(ChatModel chatModel) async {
 
     // Reference the document
     final docRef = firestore.collection('chatModels').doc(documentId);
+    // final docRef = firestore.collection('chatModels').doc('2024-12-26');
 
     // Check if the document exists
     final docSnapshot = await docRef.get();
