@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/router/app_router.dart';
+import 'feature/auth/signup/presentation/bloc/signup_bloc.dart';
 import 'feature/chat/presentation/bloc/chat_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'feature/history/presentation/bloc/history_bloc.dart';
+import 'feature/profile/presentation/bloc/profile_bloc.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -21,6 +23,12 @@ void main() async {
       ),
       BlocProvider(
         create: (context) => serviceLocator<HistoryBloc>(),
+      ),
+      BlocProvider(
+        create: (context) => serviceLocator<ProfileBloc>(),
+      ),
+      BlocProvider(
+        create: (context) => serviceLocator<SignUpBloc>(),
       ),
     ],
     child: MyApp(),

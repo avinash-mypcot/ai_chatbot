@@ -3,6 +3,7 @@ import 'package:ai_chatbot/core/theme/textstyles.dart';
 import 'package:ai_chatbot/feature/chat/presentation/bloc/chat_bloc.dart';
 import 'package:ai_chatbot/feature/chat/presentation/widgets/drawer_widget.dart';
 import 'package:ai_chatbot/feature/chat/presentation/widgets/massege_widget.dart';
+import 'package:ai_chatbot/feature/profile/presentation/bloc/profile_bloc.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,6 +54,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     context.read<ChatBloc>().add(GetTodayChat());
+    context.read<ProfileBloc>().add(ProfileGetEvent());
     super.initState();
   }
 

@@ -6,6 +6,24 @@ Future<void> initDependency() async {
   serviceLocator.registerLazySingleton(() => Dio());
   _initChat();
   _initHistory();
+  _initProfile();
+  _initSignup();
+}
+
+_initSignup() {
+  serviceLocator
+    // ..registerLazySingleton(() => ProfileApi())
+    // ..registerLazySingleton(() => ProfileServices(serviceLocator()))
+    // ..registerLazySingleton(() => ProfileRepository(serviceLocator()))
+    ..registerLazySingleton(() => SignUpBloc());
+}
+
+_initProfile() {
+  serviceLocator
+    ..registerLazySingleton(() => ProfileApi())
+    ..registerLazySingleton(() => ProfileServices(serviceLocator()))
+    ..registerLazySingleton(() => ProfileRepository(serviceLocator()))
+    ..registerLazySingleton(() => ProfileBloc(serviceLocator()));
 }
 
 _initHistory() {
