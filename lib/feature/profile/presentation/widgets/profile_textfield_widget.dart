@@ -8,16 +8,25 @@ class ProfileTextfieldWidget extends StatelessWidget {
   const ProfileTextfieldWidget(
       {super.key,
       required TextEditingController nameController,
+      required this.formKey,
       required String textHint})
       : _nameController = nameController,
         _textHint = textHint;
 
   final TextEditingController _nameController;
   final String _textHint;
+  final Key formKey;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      // key: formKey,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Please enter data";
+        }
+        return null;
+      },
       controller: _nameController,
       cursorColor: AppColors.kColorWhite,
       cursorHeight: 16.h,
