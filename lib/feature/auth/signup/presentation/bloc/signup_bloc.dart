@@ -1,20 +1,23 @@
+import 'package:ai_chatbot/feature/auth/signup/data/repository/signup_repository.dart';
 import 'package:ai_chatbot/feature/auth/signup/presentation/bloc/signup_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'signup_event.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(SignUpInitialState());
-
-  @override
-  Stream<SignUpState> mapEventToState(SignUpEvent event) async* {
-    yield SignUpLoadingState();
+  final SignUpRepository _repository;
+  SignUpBloc(this._repository) : super(SignUpInitialState()) {
+    on<SignupReqEvent>(_onSignup);
+  }
+  _onSignup(SignupReqEvent event, Emitter<SignUpState> emit) async {
+    emit(SignUpLoadingState());
     try {
-      // Simulate signup logic (e.g., Firebase)
-      await Future.delayed(Duration(seconds: 2));
-      yield SignUpSuccessState();
+      final body = {"email": event.email, "password": event.password};
+      final response = await _repository.signUpReq(body);
+      
+      emit(SignUpSuccessState(model: response));
     } catch (e) {
-      yield SignUpErrorState("Failed to sign up");
+      emit(SignUpException(e.toString()));
     }
   }
 }

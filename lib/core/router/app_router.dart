@@ -14,7 +14,14 @@ class AppRouter extends RootStackRouter {
         CustomRoute(
             page: ProfileRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
-        AutoRoute(page: SignUpRoute.page),
-        AutoRoute(page: ChatRoute.page, path: '/'),
+        CustomRoute(
+            page: SignInRoute.page,
+            transitionsBuilder: TransitionsBuilders.slideLeft,
+            path: '/'),
+        CustomRoute(
+            page: SignUpRoute.page,
+            transitionsBuilder: TransitionsBuilders.slideLeft),
+
+        AutoRoute(page: ChatRoute.page),
       ];
 }

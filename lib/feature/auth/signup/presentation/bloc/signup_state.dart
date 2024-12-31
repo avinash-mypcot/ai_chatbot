@@ -1,13 +1,27 @@
-abstract class SignUpState {}
+
+import '../../data/model/signup_model.dart';
+
+abstract class SignUpState {
+  const SignUpState();
+}
 
 class SignUpInitialState extends SignUpState {}
 
 class SignUpLoadingState extends SignUpState {}
 
-class SignUpSuccessState extends SignUpState {}
+class SignUpSuccessState extends SignUpState {
+  const SignUpSuccessState({required this.model});
+  final SignUpModel model;
+}
 
-class SignUpErrorState extends SignUpState {
+class SignUpFailed extends SignUpState {
   final String errorMessage;
 
-  SignUpErrorState(this.errorMessage);
+  SignUpFailed(this.errorMessage);
 }
+class SignUpException extends SignUpState {
+  final String errorMessage;
+
+  SignUpException(this.errorMessage);
+}
+

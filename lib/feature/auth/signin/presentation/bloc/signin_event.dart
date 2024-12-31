@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 
 // Base class for SignUp Events
-abstract class SignUpEvent extends Equatable {
-  const SignUpEvent();
+abstract class SigninEvent extends Equatable {
+  const SigninEvent();
 
   @override
   List<Object?> get props => [];
 }
 
 // Event to handle user signup
-class SignupReqEvent extends SignUpEvent {
+class SigninReqEvent extends SigninEvent {
 
 
-  const SignupReqEvent({
+  const SigninReqEvent({
     required this.email,required this.password
   });
 final String email;
@@ -20,4 +20,3 @@ final String password;
   @override
   List<Object?> get props => [email, password];
 }
-

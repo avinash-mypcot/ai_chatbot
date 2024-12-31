@@ -1,3 +1,6 @@
+import 'package:ai_chatbot/feature/auth/signup/data/api/signup_api.dart';
+import 'package:ai_chatbot/feature/auth/signup/data/repository/signup_repository.dart';
+import 'package:ai_chatbot/feature/auth/signup/data/services/signup_services.dart';
 import 'package:ai_chatbot/feature/chat/data/api/chat_api.dart';
 import 'package:ai_chatbot/feature/chat/data/repository/chat_repository.dart';
 import 'package:ai_chatbot/feature/chat/data/services/chat_services.dart';
@@ -12,6 +15,11 @@ import 'package:ai_chatbot/feature/profile/data/services/profile_services.dart';
 import 'package:ai_chatbot/feature/profile/presentation/bloc/profile_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'auth/signin/data/api/signin_api.dart';
+import 'auth/signin/data/repository/signin_repository.dart';
+import 'auth/signin/data/services/signin_services.dart';
+import 'auth/signin/presentation/bloc/signin_bloc.dart';
 import 'auth/signup/presentation/bloc/signup_bloc.dart';
 part 'init_dependencies_main.dart';

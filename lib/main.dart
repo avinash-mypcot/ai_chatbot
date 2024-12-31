@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/router/app_router.dart';
+import 'feature/auth/signin/presentation/bloc/signin_bloc.dart';
 import 'feature/auth/signup/presentation/bloc/signup_bloc.dart';
 import 'feature/chat/presentation/bloc/chat_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +30,9 @@ void main() async {
       ),
       BlocProvider(
         create: (context) => serviceLocator<SignUpBloc>(),
+      ),
+      BlocProvider(
+        create: (context) => serviceLocator<SigninBloc>(),
       ),
     ],
     child: MyApp(),
