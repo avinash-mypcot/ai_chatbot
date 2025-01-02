@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'app_router.gr.dart';
 
 @AutoRouterConfig()
@@ -14,14 +15,20 @@ class AppRouter extends RootStackRouter {
         CustomRoute(
             page: ProfileRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
-        CustomRoute(
-            page: SignInRoute.page,
-            transitionsBuilder: TransitionsBuilders.slideLeft,
-            path: '/'),
+        FirebaseAuth.instance.currentUser == null
+            ? CustomRoute(
+                page: SignInRoute.page,
+                transitionsBuilder: TransitionsBuilders.slideRight,
+                path: '/')
+            : CustomRoute(
+                page: SignInRoute.page,
+                transitionsBuilder: TransitionsBuilders.slideRight,
+              ),
         CustomRoute(
             page: SignUpRoute.page,
             transitionsBuilder: TransitionsBuilders.slideLeft),
-
-        AutoRoute(page: ChatRoute.page),
+        FirebaseAuth.instance.currentUser == null
+            ? AutoRoute(page: ChatRoute.page)
+            : AutoRoute(page: ChatRoute.page, path: '/'),
       ];
 }

@@ -8,8 +8,9 @@ sealed class ChatEvent extends Equatable {
 }
 
 class ChatRequest extends ChatEvent {
-  const ChatRequest({required this.msg});
+  const ChatRequest({required this.msg, required this.date});
   final String msg;
+   final String date;
 
   @override
   List<Object> get props => [];

@@ -143,52 +143,59 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                 Positioned(
                   right: 2.w,
                   bottom: 9.h,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (isMic) {
-                        setState(() {
-                          isListen = true;
-                        });
-                        _speechToText.isNotListening
-                            ? _startListening()
-                            : _stopListening();
-                      } else {
-                        context
-                            .read<ChatBloc>()
-                            .add(ChatRequest(msg: widget.msg.text.trim()));
-                        widget.msg.clear();
-                        widget
-                            .scroll(); // Scroll to the end when a new message is sent
-                        setState(() {
-                          isMic = true;
-                        });
+                  child: BlocBuilder<ChatBloc, ChatState>(
+                    builder: (context, state) {
+                      if (state is ChatLoaded) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (isMic) {
+                              setState(() {
+                                isListen = true;
+                              });
+                              _speechToText.isNotListening
+                                  ? _startListening()
+                                  : _stopListening();
+                            } else {
+                              context.read<ChatBloc>().add(ChatRequest(
+                                  msg: widget.msg.text.trim(),
+                                  date: state.data.date!));
+                              widget.msg.clear();
+                              widget
+                                  .scroll(); // Scroll to the end when a new message is sent
+                              setState(() {
+                                isMic = true;
+                              });
+                            }
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(right: 8.w, top: 6.h),
+                            height: 35.h,
+                            width: 35.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.kColorBlack,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: !isMic
+                                  ? Icon(
+                                      Icons.send,
+                                      color: AppColors.kColorWhite,
+                                    )
+                                  : isListen
+                                      ? Icon(
+                                          Icons.mic,
+                                          color: AppColors.kColorWhite,
+                                        )
+                                      : Icon(
+                                          Icons.mic_off,
+                                          color: AppColors.kColorWhite,
+                                        ),
+                            ),
+                          ),
+                        );
                       }
+                      return SizedBox();
                     },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 8.w, top: 6.h),
-                      height: 35.h,
-                      width: 35.h,
-                      decoration: BoxDecoration(
-                        color: AppColors.kColorBlack,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: !isMic
-                            ? Icon(
-                                Icons.send,
-                                color: AppColors.kColorWhite,
-                              )
-                            : isListen
-                                ? Icon(
-                                    Icons.mic,
-                                    color: AppColors.kColorWhite,
-                                  )
-                                : Icon(
-                                    Icons.mic_off,
-                                    color: AppColors.kColorWhite,
-                                  ),
-                      ),
-                    ),
                   ),
                 )
               ],

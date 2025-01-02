@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-
   static const Color kColorWhite = Colors.white;
   static const Color kColorBlack = Colors.black;
   static const Color kColorGrey = Colors.grey;
   static const Color kColorBlue = Colors.blueAccent;
+  static const Color kColored = Color(0xFFCE0E0E);
 
   //Logging
   static const String reset = '\x1B[0m';

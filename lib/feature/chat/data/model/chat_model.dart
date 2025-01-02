@@ -2,23 +2,21 @@ class ChatModel {
   final List<Candidates>? candidates;
   final UsageMetadata? usageMetadata;
   final String? modelVersion;
+  final String? date;
 
-  ChatModel({
-    this.candidates,
-    this.usageMetadata,
-    this.modelVersion,
-  });
+  ChatModel(
+      {this.candidates, this.usageMetadata, this.modelVersion, this.date});
 
-  ChatModel copyWith({
-    List<Candidates>? candidates,
-    UsageMetadata? usageMetadata,
-    String? modelVersion,
-  }) {
+  ChatModel copyWith(
+      {List<Candidates>? candidates,
+      UsageMetadata? usageMetadata,
+      String? modelVersion,
+      String? date}) {
     return ChatModel(
-      candidates: candidates ?? this.candidates,
-      usageMetadata: usageMetadata ?? this.usageMetadata,
-      modelVersion: modelVersion ?? this.modelVersion,
-    );
+        candidates: candidates ?? this.candidates,
+        usageMetadata: usageMetadata ?? this.usageMetadata,
+        modelVersion: modelVersion ?? this.modelVersion,
+        date: date ?? this.date);
   }
 
   ChatModel.fromJson(Map<String, dynamic> json)
@@ -29,7 +27,8 @@ class ChatModel {
             ? UsageMetadata.fromJson(
                 json['usageMetadata'] as Map<String, dynamic>)
             : null,
-        modelVersion = json['modelVersion'] as String?;
+        modelVersion = json['modelVersion'] as String?,
+        date = (json['date'] as String?);
 
   Map<String, dynamic> toJson() => {
         'candidates': candidates?.map((e) => e.toJson()).toList(),
