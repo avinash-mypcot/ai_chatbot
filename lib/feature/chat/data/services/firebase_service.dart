@@ -1,50 +1,28 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
 
-import '../model/chat_model.dart';
+import '../api/firebase_chat_api.dart';
 
-Future<void> appendPartsToFirestore(
-    ChatModel chatModel, String documentId) async {
-  try {
-    // Initialize Firestore instance
-    final firestore = FirebaseFirestore.instance;
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final uId = auth.currentUser!.uid;
-    // Get today's date in 'yyyy-MM-dd' format for document ID
-    // String documentId = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-    // Extract the parts to be appended
-    List<dynamic> newParts = chatModel.candidates!
-        .expand((candidate) => candidate.content?.parts ?? [])
-        .map((part) => part.toJson())
-        .toList();
-
-    // Reference the document
-    final docRef = firestore
-        .collection('chatModels')
-        .doc(uId)
-        .collection('chats')
-        .doc(documentId);
-    // final docRef = firestore.collection('chatModels').doc('2024-12-26');
-
-    // Check if the document exists
-    final docSnapshot = await docRef.get();
-
-    if (docSnapshot.exists) {
-      // Append new parts to the existing parts in Firestore
-      await docRef.update({
-        'chats.0.candidates.0.content.parts': FieldValue.arrayUnion(newParts),
-      });
-    } else {
-      // If document does not exist, create it
-      await docRef.set({
-        'chats': [chatModel.toJson()],
-        'date': DateTime.now(),
-      });
+class FirebaseServices {
+  final FirebaseChatApi _api;
+  const FirebaseServices({required FirebaseChatApi api})
+      : _api = api,
+        super();
+  Future<ChatModel> getTodayChat() async {
+    try {
+      var res = await _api.getTodayChat();
+      return res;
+    } catch (e) {
+      rethrow;
     }
+  }
 
-    print("Parts successfully appended to Firestore!");
-  } catch (e) {
-    print("Error appending parts to Firestore: $e");
+  Future<void> appendPartsToFirestore(
+      ChatModel updatedModel, String date, bool isNewChat) async {
+    try {
+      var res = await _api.appendPartsToFirestore(updatedModel, date,isNewChat:isNewChat);
+      return res;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

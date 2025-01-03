@@ -5,10 +5,59 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+import '../model/history_model.dart';
+
 class HistoryApi {
   const HistoryApi();
-  Future<List<ChatModel>> getHistory() async {
+  // Future<List<ChatModel>> getHistory() async {
+  //   final uId = FirebaseAuth.instance.currentUser!.uid;
+  //   try {
+  //     // Fetch data from Firestore under the given uId
+  //     final snapshot = await FirebaseFirestore.instance
+  //         .collection('chatModels') // Root Firestore collection
+  //         .doc(uId) // Document for the specific user
+  //         .collection('chats') // Sub-collection for chats
+  //         .orderBy('date', descending: true) // Sort by date
+  //         .get();
+
+  //     // Map Firestore data to ChatModel
+  //     final fetchedChats = snapshot.docs.map((doc) {
+  //       var data = doc.data();
+  //       log('DATA : $data');
+  //       var content;
+  //       if (data['chats'].runtimeType != List<dynamic>) {
+  //         // Parse the content field from Firestore data
+  //         dynamic content1 = data['chats']['0']['candidates']['0']['content'];
+  //         content = Content.fromJson(content1);
+  //       } else {
+  //         // Parse the content field from Firestore data
+  //         dynamic content1 = data['chats'][0]['candidates'][0]['content'];
+  //         content = Content.fromJson(content1);
+  //       }
+
+  //       // Extract parts and date information
+  //       List<Parts> parts = content.parts ?? [];
+  //       final dateTime = (data['date'] as Timestamp).toDate();
+  //       final formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+
+  //       return ChatModel(
+  //         date: formattedDate,
+  //         candidates: [
+  //           Candidates(content: Content(parts: parts), date: formattedDate)
+  //         ],
+  //       );
+  //     }).toList();
+
+  //     return fetchedChats;
+  //   } catch (e) {
+  //     print("Error fetching chat history for uId $uId: $e");
+  //     rethrow;
+  //   }
+  // }
+
+  Future<HistoryModel> getHistory() async {
     final uId = FirebaseAuth.instance.currentUser!.uid;
+
     try {
       // Fetch data from Firestore under the given uId
       final snapshot = await FirebaseFirestore.instance
@@ -18,74 +67,66 @@ class HistoryApi {
           .orderBy('date', descending: true) // Sort by date
           .get();
 
-      // Map Firestore data to ChatModel
-      final fetchedChats = snapshot.docs.map((doc) {
+      // Map Firestore data to HistoryModel
+      final List<Data> fetchedData = snapshot.docs.map((doc) {
         var data = doc.data();
         log('DATA : $data');
-        var content;
-        if (data['chats'].runtimeType != List<dynamic>) {
-          // Parse the content field from Firestore data
-          dynamic content1 = data['chats']['0']['candidates']['0']['content'];
-          content = Content.fromJson(content1);
+
+        // Initialize chats as an empty list
+        List<ChatModel> chats = [];
+
+        if (data['chats'] is List<dynamic>) {
+          // Handle case when data['chats'] is a list
+          chats = (data['chats'] as List<dynamic>).map((chat) {
+            final contentJson = chat['candidates'][0]['content'];
+            final content = Content.fromJson(contentJson);
+
+            // Extract parts
+            final List<Parts> parts = content.parts ?? [];
+            final dateTime = (data['date'] as Timestamp).toDate();
+            final formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+
+            return ChatModel(
+              date: formattedDate,
+              candidates: [
+                Candidates(content: Content(parts: parts), date: formattedDate),
+              ],
+            );
+          }).toList();
         } else {
-          // Parse the content field from Firestore data
-          dynamic content1 = data['chats'][0]['candidates'][0]['content'];
-          content = Content.fromJson(content1);
+          // Handle case when data['chats'] is a map
+          final mapChats = data['chats'] as Map<String, dynamic>;
+          chats = mapChats.entries.map((entry) {
+            final chat = entry.value;
+            final contentJson = chat['candidates']['0']['content'];
+            final content = Content.fromJson(contentJson);
+
+            // Extract parts
+            final List<Parts> parts = content.parts ?? [];
+            final dateTime = (data['date'] as Timestamp).toDate();
+            final formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
+
+            return ChatModel(
+              date: formattedDate,
+              candidates: [
+                Candidates(content: Content(parts: parts), date: formattedDate),
+              ],
+            );
+          }).toList();
         }
 
-        // Extract parts and date information
-        List<Parts> parts = content.parts ?? [];
-        final dateTime = (data['date'] as Timestamp).toDate();
-        final formattedDate =
-            DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+        // Create Date object
+        final Date dateObject = Date(chats: chats);
 
-        return ChatModel(
-          candidates: [
-            Candidates(content: Content(parts: parts), date: formattedDate)
-          ],
-        );
+        // Create Data object
+        return Data(date: dateObject);
       }).toList();
 
-      return fetchedChats;
+      // Return the mapped HistoryModel
+      return HistoryModel(data: fetchedData);
     } catch (e) {
       print("Error fetching chat history for uId $uId: $e");
       rethrow;
     }
   }
-
-  // Future<List<ChatModel>> getHistory()async{
-  //    try {
-  //     // Fetch data from Firestore
-  //     final snapshot = await FirebaseFirestore.instance
-  //         .collection('chatModels') // your Firestore collection name
-  //         .orderBy('date', descending: true) // Assuming there's a date field
-  //         .get();
-  //     // Map Firestore data to ChatModel
-  //     final fetchedChats = snapshot.docs.map((doc) {
-  //       var data = doc.data();
-
-  //       dynamic content1 = data['chats'].runtimeType == List
-  //           ? data['chats'][0]['candidates'][0]['content']
-  //           : data['chats']['0']['candidates']['0']['content'];
-  //       var content = Content.fromJson(content1);
-
-  //       List<Parts> parts = content.parts ?? [];
-  //       final dateTime = (data['date'] as Timestamp).toDate();
-  //       final formattedDate =
-  //           DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
-  //       return ChatModel(
-  //         candidates: [
-  //           Candidates(content: Content(parts: parts), date: formattedDate)
-  //         ],
-  //       );
-  //     }).toList();
-
-  //     return fetchedChats;
-
-  //   } catch (e) {
-  //     print("Error fetching chat history: $e");
-  //     rethrow;
-
-  //   }
-  // }
 }

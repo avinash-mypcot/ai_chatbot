@@ -58,15 +58,25 @@ class _HistoryPageState extends State<HistoryPage> {
                   builder: (context, state) {
                     if (state is HistoryLoaded) {
                       return ListView.builder(
-                        itemCount: state.model.length,
+                        itemCount: state.model.data!.length,
                         itemBuilder: (context, index) {
-                          final chat = state.model[index];
-                          return GestureDetector(
-                              onTap: () {
-                                context.read<ChatBloc>().add(
-                                    ChatHistory(model: state.model[index]));
-                              },
-                              child: ChatCard(chat: chat));
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  state.model.data![index].date!.chats!.length,
+                              itemBuilder: (context, index1) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.read<ChatBloc>().add(ChatHistory(
+                                        model: state.model.data![index].date!
+                                            .chats![index1]));
+                                  },
+                                  child: ChatCard(
+                                      chat: state.model.data![index].date!
+                                          .chats![index1]),
+                                );
+                              });
                         },
                       );
                     } else if (state is HistoryLoading) {

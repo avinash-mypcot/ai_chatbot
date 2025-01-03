@@ -54,7 +54,9 @@ class _SignInPageState extends State<SignInPage> {
                         Text(
                           "Login",
                           style: kTextStylePoppins500.copyWith(
-                              fontSize: 24.sp, color: AppColors.kColorGrey),
+                            fontSize: 24.sp,
+                            color: AppColors.kColorWhite.withValues(alpha: 0.9),
+                          ),
                         ),
                         SizedBox(height: 30.h),
                         Text(
@@ -102,7 +104,8 @@ class _SignInPageState extends State<SignInPage> {
                           child: Container(
                             padding: EdgeInsets.all(12.sp),
                             decoration: BoxDecoration(
-                              color: AppColors.kColorGrey,
+                              color:
+                                  AppColors.kColorWhite.withValues(alpha: 0.9),
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Center(
@@ -119,18 +122,25 @@ class _SignInPageState extends State<SignInPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Create an account?",
+                              "Create an account? ",
                               style: kTextStylePoppins300.copyWith(
-                                  color: AppColors.kColorGrey),
+                                color: AppColors.kColorWhite
+                                    .withValues(alpha: 0.9),
+                              ),
                             ),
                             GestureDetector(
                               onTap: () {
                                 context.router.replace(SignUpRoute());
                               },
                               child: Text(
-                                " Register",
+                                "Register",
                                 style: kTextStylePoppins300.copyWith(
-                                    color: AppColors.kColorGrey),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: AppColors.kColorWhite
+                                      .withValues(alpha: 0.9),
+                                  color: AppColors.kColorWhite
+                                      .withValues(alpha: 0.9),
+                                ),
                               ),
                             ),
                           ],
@@ -154,12 +164,12 @@ class _SignInPageState extends State<SignInPage> {
             listener: (context, state) {
               if (state is SigninException) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("${state.errorMessage}")),
+                  SnackBar(content: Text(state.errorMessage)),
                 );
               } else if (state is SigninSuccessState) {
                 context.router.replace(ChatRoute());
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("${state.model.message}")),
+                  SnackBar(content: Text(state.model.message)),
                 );
               }
             },

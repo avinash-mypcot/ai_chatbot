@@ -1,5 +1,6 @@
 import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
 import 'package:dio/dio.dart';
+
 import 'package:retrofit/retrofit.dart';
 
 import '../../../../core/config/app_config.dart';
@@ -11,4 +12,6 @@ abstract class ChatApi {
 
   @POST(AppConfig.chatApi)
   Future<ChatModel> getInformation({@Query('key') required  String key,@Body() required Map<String, dynamic> body});
+
 }
+

@@ -1,75 +1,39 @@
 import 'dart:developer';
-
 import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
-import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ai_chatbot/feature/chat/data/repository/firebase_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../data/repository/chat_repository.dart';
-import '../../data/services/firebase_service.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   HomeRepository repository;
-  ChatBloc({required this.repository}) : super(ChatInitial()) {
+  FirebaseRepository firebaseRepository;
+  ChatBloc({required this.repository, required this.firebaseRepository})
+      : super(ChatInitial()) {
     on<ChatRequest>(_onMassageRequest);
     on<ChatHistory>(_onSetHistoryRequest);
     on<GetTodayChat>(_onGetTodayChat);
+    on<NewChatEvent>(_onNewChatEvent);
+  }
+
+  _onNewChatEvent(NewChatEvent event, Emitter<ChatState> emit) {
+    emit(ChatLoaded(
+        isNewChat: true,
+        data: ChatModel(
+            date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+            candidates: [Candidates(content: Content(parts: []))])));
   }
 
   Future<void> _onGetTodayChat(
       GetTodayChat event, Emitter<ChatState> emit) async {
     try {
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      final uId = auth.currentUser?.uid;
+      final res = await firebaseRepository.getTodayChat();
 
-      final todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      log("DAte : $todayDate");
-      final snapshot = await FirebaseFirestore.instance
-          .collection('chatModels')
-          .doc(uId)
-          .collection('chats')
-          .doc(todayDate)
-          .get();
-      log("Data Length:  ${snapshot.data()}");
-
-      final data = snapshot.data();
-      if (data == null) {
-        emit(ChatLoaded(
-            data: ChatModel(
-                date: todayDate,
-                candidates: [Candidates(content: Content(parts: []))])));
-        return;
-      }
-
-      // Safely navigate the structure and deserialize the data
-      final chats = data!['chats'];
-      log("Data ${chats!['0']}");
-
-      final candidates = chats['0']['candidates'];
-
-      final contentJson = candidates['0']['content'] as Map<String, dynamic>?;
-
-      final content = Content.fromJson(contentJson!);
-
-      // Parse parts and date
-      List<Parts> parts = content.parts!;
-      final timestamp = data['date'] as Timestamp?;
-      final formattedDate = timestamp != null
-          ? DateFormat('yyyy-MM-dd HH:mm:ss').format(timestamp.toDate())
-          : "Unknown Date";
-
-      final model = ChatModel(
-        date: todayDate,
-        candidates: [
-          Candidates(content: content, date: formattedDate),
-        ],
-      );
-
-      emit(ChatLoaded(data: model));
+      emit(ChatLoaded(data: res));
     } catch (e) {
       log("Error: $e");
       // emit(ChatError(message: "Failed to load chat data"));
@@ -101,13 +65,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ]))
       ]);
       log("date1 ${updatedModel.date}");
-      emit(ChatLoaded(data: updatedModel));
+      emit(ChatLoaded(isNewChat: event.isNewChat, data: updatedModel));
     } else if (CurrentState is ChatInitial) {
       ChatModel model = ChatModel(date: event.date, candidates: [
         Candidates(
             content: Content(parts: [Parts(isUser: true, text: event.msg)]))
       ]);
-      emit(ChatLoaded(data: model));
+      emit(ChatLoaded(isNewChat: event.isNewChat, data: model));
     }
     final CurrentState1 = state;
     try {
@@ -124,9 +88,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           ]))
         ]);
         // Store updatedModel in Firebase before emitting the state
-        await appendPartsToFirestore(updatedModel, event.date);
+        firebaseRepository.appendPartsToFirestore(
+            updatedModel, event.date, event.isNewChat);
+
         log("date ${updatedModel.date}");
         emit(ChatLoaded(
+          isNewChat: event.isNewChat,
           data: updatedModel,
         ));
       } else {

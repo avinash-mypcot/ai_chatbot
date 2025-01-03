@@ -23,8 +23,7 @@ class ProfileApi {
 
         return profileModel;
       } else {
-        log("Exception :");
-        throw Exception('Profile not found');
+        return ProfileModel(name: '', email: '', mobile: '');
       }
     } catch (e) {
       log("Exception :$e");

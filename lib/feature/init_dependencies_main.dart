@@ -11,13 +11,15 @@ Future<void> initDependency() async {
   _initSignup();
   _initSignin();
 }
- _initSignin(){
-   serviceLocator
+
+_initSignin() {
+  serviceLocator
     ..registerLazySingleton(() => SigninApi())
     ..registerLazySingleton(() => SigninServices(serviceLocator()))
     ..registerLazySingleton(() => SigninRepository(serviceLocator()))
     ..registerLazySingleton(() => SigninBloc(serviceLocator()));
- }
+}
+
 _initSignup() {
   serviceLocator
     ..registerLazySingleton(() => SignUpApi())
@@ -47,11 +49,15 @@ _initChat() {
   serviceLocator
     //Api
     ..registerLazySingleton(() => ChatApi(serviceLocator()))
+    ..registerLazySingleton(() => FirebaseChatApi())
     //Services
     ..registerLazySingleton(
         () => ChatServices(api: serviceLocator(), dio: serviceLocator()))
+    ..registerLazySingleton(() => FirebaseServices(api: serviceLocator()))
     //Repository
     ..registerFactory(() => HomeRepository(service: serviceLocator()))
+    ..registerLazySingleton(() => FirebaseRepository(service: serviceLocator()))
     //Bloc
-    ..registerLazySingleton(() => ChatBloc(repository: serviceLocator()));
+    ..registerLazySingleton(() => ChatBloc(
+        repository: serviceLocator(), firebaseRepository: serviceLocator()));
 }

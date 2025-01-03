@@ -8,12 +8,13 @@ sealed class ChatEvent extends Equatable {
 }
 
 class ChatRequest extends ChatEvent {
-  const ChatRequest({required this.msg, required this.date});
+  const ChatRequest({required this.msg, required this.date,this.isNewChat=false});
   final String msg;
-   final String date;
+  final String date;
+  final bool isNewChat;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [msg,date,isNewChat];
 }
 
 class ChatHistory extends ChatEvent {
@@ -23,8 +24,16 @@ class ChatHistory extends ChatEvent {
   @override
   List<Object> get props => [model];
 }
+
 class GetTodayChat extends ChatEvent {
   const GetTodayChat();
-   @override
+  @override
+  List<Object> get props => [];
+}
+
+class NewChatEvent extends ChatEvent {
+  const NewChatEvent();
+
+  @override
   List<Object> get props => [];
 }

@@ -1,3 +1,4 @@
+import 'package:ai_chatbot/core/constants/app_icons.dart';
 import 'package:ai_chatbot/core/theme/app_colors.dart';
 import 'package:ai_chatbot/core/theme/textstyles.dart';
 import 'package:ai_chatbot/feature/chat/presentation/bloc/chat_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../widgets/bottom_box_widget.dart';
+import 'package:svg_flutter/svg_flutter.dart';
 
 @RoutePage()
 class ChatPage extends StatefulWidget {
@@ -69,20 +71,26 @@ class _ChatPageState extends State<ChatPage> {
           centerTitle: true,
           backgroundColor: AppColors.kColorBlack.withValues(alpha: 0.9),
           leading: GestureDetector(
-            onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
-              _scaffoldKey.currentState!.openDrawer();
-            },
-            child: Icon(
-              Icons.menu,
-              color: AppColors.kColorWhite,
-            ),
-          ),
+              onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+                _scaffoldKey.currentState!.openDrawer();
+              },
+              child: AppIcons.kMenuIc),
           title: Text(
-            "AI Chat",
+            "Chat with us!",
             style: kTextStylePoppins400.copyWith(
                 fontSize: 16.sp, color: AppColors.kColorWhite),
           ),
+          actions: [
+            GestureDetector(
+                onTap: () {
+                  context.read<ChatBloc>().add(NewChatEvent());
+                },
+                child: SvgPicture.asset(AppIcons.kNewChatIc)),
+            SizedBox(
+              width: 12.w,
+            ),
+          ],
         ),
         body: Stack(
           children: [

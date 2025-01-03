@@ -15,7 +15,7 @@ class HistoryLoading extends HistoryState {
 
 class HistoryLoaded extends HistoryState {
   const HistoryLoaded({required this.model});
-  final List<ChatModel> model;
+  final HistoryModel model;
 
   @override
   List<Object> get props => [model];

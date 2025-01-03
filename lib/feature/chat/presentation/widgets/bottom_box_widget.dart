@@ -142,7 +142,7 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                 ),
                 Positioned(
                   right: 2.w,
-                  bottom: 9.h,
+                  bottom: 7.h,
                   child: BlocBuilder<ChatBloc, ChatState>(
                     builder: (context, state) {
                       if (state is ChatLoaded) {
@@ -157,6 +157,7 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                                   : _stopListening();
                             } else {
                               context.read<ChatBloc>().add(ChatRequest(
+                                  isNewChat: state.isNewChat,
                                   msg: widget.msg.text.trim(),
                                   date: state.data.date!));
                               widget.msg.clear();
@@ -172,7 +173,7 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                             height: 35.h,
                             width: 35.h,
                             decoration: BoxDecoration(
-                              color: AppColors.kColorBlack,
+                              color: AppColors.kColorBlue,
                               shape: BoxShape.circle,
                             ),
                             child: Center(
