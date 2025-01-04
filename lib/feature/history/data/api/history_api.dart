@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+import '../../../chat/data/services/encription_helper.dart';
 import '../model/history_model.dart';
 
 class HistoryApi {
@@ -57,6 +58,8 @@ class HistoryApi {
 
   Future<HistoryModel> getHistory() async {
     final uId = FirebaseAuth.instance.currentUser!.uid;
+    final encryptionHelper =
+        EncryptionHelper('6gHdJ1kLmNoP8b2x', '3xTu9R4dWq8YtZkC');
 
     try {
       // Fetch data from Firestore under the given uId
@@ -83,15 +86,28 @@ class HistoryApi {
 
             // Extract parts
             final List<Parts> parts = content.parts ?? [];
+
             final dateTime = (data['date'] as Timestamp).toDate();
             final formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
-            return ChatModel(
+            final model = ChatModel(
               date: formattedDate,
               candidates: [
                 Candidates(content: Content(parts: parts), date: formattedDate),
               ],
             );
+            ChatModel dencryptedModel = model.copyWith(candidates: [
+              model.candidates![0].copyWith(
+                  content: model.candidates![0].content!.copyWith(parts: [
+                for (var part in model.candidates![0].content!.parts!)
+                  Parts(
+                    isUser: part.isUser,
+                    text: encryptionHelper.decryptText(part.text!),
+                  )
+              ]))
+            ]);
+
+            return dencryptedModel;
           }).toList();
         } else {
           // Handle case when data['chats'] is a map

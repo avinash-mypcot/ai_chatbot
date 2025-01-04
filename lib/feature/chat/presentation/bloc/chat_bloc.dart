@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../../data/repository/chat_repository.dart';
+import '../../data/services/encription_helper.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -45,6 +46,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   _onMassageRequest(ChatRequest event, Emitter<ChatState> emit) async {
+    final encryptionHelper =
+        EncryptionHelper('6gHdJ1kLmNoP8b2x', '3xTu9R4dWq8YtZkC');
     Map<String, dynamic> body = {
       "contents": [
         {
@@ -87,9 +90,24 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             ...response.candidates![0].content!.parts!,
           ]))
         ]);
-        // Store updatedModel in Firebase before emitting the state
+        // // Store updatedModel in Firebase before emitting the state
+        // firebaseRepository.appendPartsToFirestore(
+        //     updatedModel, event.date, event.isNewChat);
+        // Create an encrypted model only for Firebase storage
+        ChatModel encryptedModel = updatedModel.copyWith(candidates: [
+          updatedModel.candidates![0].copyWith(
+              content: updatedModel.candidates![0].content!.copyWith(parts: [
+            for (var part in updatedModel.candidates![0].content!.parts!)
+              Parts(
+                isUser: part.isUser,
+                text: encryptionHelper.encryptText(part.text!),
+              )
+          ]))
+        ]);
+
+        // Append the encrypted model to Firebase
         firebaseRepository.appendPartsToFirestore(
-            updatedModel, event.date, event.isNewChat);
+            encryptedModel, event.date, event.isNewChat);
 
         log("date ${updatedModel.date}");
         emit(ChatLoaded(
@@ -100,6 +118,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(ChatLoaded(data: response));
       }
     } catch (e) {
+      log("ERROR : $e");
       emit(ChatException(errorMessage: e.toString()));
     }
   }

@@ -53,6 +53,7 @@ dependencies:
   firebase_auth: ^5.3.4
   shared_preferences: ^2.3.4
   svg_flutter: ^0.0.1
+  encrypt: ^5.0.3
 
 dev_dependencies:
   flutter_test:

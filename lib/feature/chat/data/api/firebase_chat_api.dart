@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import '../model/chat_model.dart';
+import '../services/encription_helper.dart';
 
 class FirebaseChatApi {
-
-Future<ChatModel> getTodayChat() async {
+  Future<ChatModel> getTodayChat() async {
+    final encryptionHelper =
+        EncryptionHelper('6gHdJ1kLmNoP8b2x', '3xTu9R4dWq8YtZkC');
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final uId = auth.currentUser?.uid;
@@ -47,6 +51,7 @@ Future<ChatModel> getTodayChat() async {
 
       // Parse parts and date
       List<Parts> parts = content.parts!;
+
       final timestamp = data['date'] as Timestamp?;
       final formattedDate = timestamp != null
           ? DateFormat('yyyy-MM-dd').format(timestamp.toDate())
@@ -58,7 +63,17 @@ Future<ChatModel> getTodayChat() async {
           Candidates(content: content, date: formattedDate),
         ],
       );
-      return model;
+      ChatModel dencryptedModel = model.copyWith(candidates: [
+        model.candidates![0].copyWith(
+            content: model.candidates![0].content!.copyWith(parts: [
+          for (var part in model.candidates![0].content!.parts!)
+            Parts(
+              isUser: part.isUser,
+              text: encryptionHelper.decryptText(part.text!),
+            )
+        ]))
+      ]);
+      return dencryptedModel;
       // emit(ChatLoaded(data: model));
     } catch (e) {
       rethrow;
@@ -66,8 +81,8 @@ Future<ChatModel> getTodayChat() async {
     }
   }
 
-
-Future<void> appendPartsToFirestore(ChatModel chatModel, String documentId,{bool isNewChat = false}) async {
+  Future<void> appendPartsToFirestore(ChatModel chatModel, String documentId,
+      {bool isNewChat = false}) async {
     try {
       // Initialize Firestore instance
       final firestore = FirebaseFirestore.instance;
@@ -97,9 +112,17 @@ Future<void> appendPartsToFirestore(ChatModel chatModel, String documentId,{bool
         // Append new parts to the existing parts in Firestore
         if (isNewChat) {
           final leng = docSnapshot.data()!['chats'].length;
+          List<dynamic> oldData = docSnapshot.data()!['chats'];
+          log("OLDDSTA ${oldData.runtimeType}");
+          oldData.add({
+            'candidates': [
+              {
+                'content': {'parts': newParts},
+              }
+            ]
+          });
           await docRef.update({
-            'chats.$leng.candidates.0.content.parts':
-                FieldValue.arrayUnion(newParts),
+            'chats': oldData,
           });
         } else {
           final leng = docSnapshot.data()!['chats'].length;
@@ -121,5 +144,4 @@ Future<void> appendPartsToFirestore(ChatModel chatModel, String documentId,{bool
       print("Error appending parts to Firestore: $e");
     }
   }
-
 }
