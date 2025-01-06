@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:ai_chatbot/core/utils/utils.dart';
 import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
 import 'package:dio/dio.dart';
 
 import '../api/chat_api.dart';
+import '../model/upload_image_model.dart';
 
 class ChatServices {
   final ChatApi _api;
@@ -18,6 +21,18 @@ class ChatServices {
       return _api.getInformation(
           key: 'AIzaSyDaKc-H4hWesxWJt6ARDVz7rYcBn0ILUQw', body: body);
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UploadImageModel> uploadImageToGemini(
+      String key, FormData data) async {
+    try {
+      final res = await _api.uploadImage(
+          key: 'AIzaSyDaKc-H4hWesxWJt6ARDVz7rYcBn0ILUQw', data: data);
+      return res;
+    } catch (e) {
+      log("ERROR $e");
       rethrow;
     }
   }

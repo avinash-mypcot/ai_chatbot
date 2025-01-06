@@ -59,5 +59,8 @@ _initChat() {
     ..registerLazySingleton(() => FirebaseRepository(service: serviceLocator()))
     //Bloc
     ..registerLazySingleton(() => ChatBloc(
-        repository: serviceLocator(), firebaseRepository: serviceLocator()));
+        repository: serviceLocator(), firebaseRepository: serviceLocator()))
+    ..registerLazySingleton(() => UploadImageBloc(
+          repository: serviceLocator(),
+        ));
 }

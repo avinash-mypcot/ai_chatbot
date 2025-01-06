@@ -66,13 +66,15 @@ class DrawerWidget extends StatelessWidget {
                               height: 1.h,
                             ),
                             Text(
-                              state.model.name,
+                              state.model.name.isNotEmpty
+                                  ? state.model.name
+                                  : "Unknown",
                               style: kTextStylePoppins400.copyWith(
                                   fontSize: 14.sp,
                                   color: AppColors.kColorWhite),
                             ),
                             Text(
-                              '+91 ${state.model.mobile}',
+                              '+91 ${state.model.mobile.isNotEmpty ? state.model.mobile : "1234567890"}',
                               style: kTextStylePoppins400.copyWith(
                                   fontSize: 14.sp,
                                   color: AppColors.kColorWhite),

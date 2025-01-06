@@ -1,4 +1,5 @@
 import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
+import 'package:ai_chatbot/feature/chat/data/model/upload_image_model.dart';
 import 'package:dio/dio.dart';
 
 import 'package:retrofit/retrofit.dart';
@@ -12,6 +13,9 @@ abstract class ChatApi {
 
   @POST(AppConfig.chatApi)
   Future<ChatModel> getInformation({@Query('key') required  String key,@Body() required Map<String, dynamic> body});
+
+  @POST(AppConfig.uploadImageApi)
+  Future<UploadImageModel> uploadImage({@Query('key') required String key,@Body() required FormData data});
 
 }
 

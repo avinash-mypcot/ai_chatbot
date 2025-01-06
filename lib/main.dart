@@ -7,6 +7,7 @@ import 'feature/auth/signin/presentation/bloc/signin_bloc.dart';
 import 'feature/auth/signup/presentation/bloc/signup_bloc.dart';
 import 'feature/chat/presentation/bloc/chat_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'feature/chat/presentation/bloc/upload_image_bloc/upload_image_bloc.dart';
 import 'feature/history/presentation/bloc/history_bloc.dart';
 import 'feature/profile/presentation/bloc/profile_bloc.dart';
 import 'firebase_options.dart';
@@ -33,6 +34,9 @@ void main() async {
       ),
       BlocProvider(
         create: (context) => serviceLocator<SigninBloc>(),
+      ),
+      BlocProvider(
+        create: (context) => serviceLocator<UploadImageBloc>(),
       ),
     ],
     child: MyApp(),

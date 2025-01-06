@@ -14,7 +14,7 @@ class _ChatApi implements ChatApi {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= 'https://generativelanguage.googleapis.com/v1beta';
+    baseUrl ??= 'https://generativelanguage.googleapis.com';
   }
 
   final Dio _dio;
@@ -40,7 +40,7 @@ class _ChatApi implements ChatApi {
     )
         .compose(
           _dio.options,
-          '/models/gemini-1.5-flash:generateContent',
+          '/v1beta/models/gemini-1.5-flash:generateContent',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -53,6 +53,42 @@ class _ChatApi implements ChatApi {
     late ChatModel _value;
     try {
       _value = ChatModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<UploadImageModel> uploadImage({
+    required String key,
+    required FormData data,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'key': key};
+    final _headers = <String, dynamic>{};
+    final _data = data;
+    final _options = _setStreamType<UploadImageModel>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/upload/v1beta/files',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late UploadImageModel _value;
+    try {
+      _value = UploadImageModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
