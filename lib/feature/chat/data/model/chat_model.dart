@@ -106,24 +106,41 @@ class Content {
 class Parts {
   final String? text;
   final bool? isUser;
+  final String? base64Image;
+  final String? time;
 
   Parts({
+    this.time,
     this.text,
     this.isUser,
+    this.base64Image,
   });
 
-  Parts copyWith({String? text, bool? isUser, String? date}) {
+  Parts copyWith(
+      {String? text,
+      bool? isUser,
+      String? date,
+      String? base64Image,
+      String? time}) {
     return Parts(
-      text: text ?? this.text,
-      isUser: isUser ?? this.isUser,
-    );
+        text: text ?? this.text,
+        isUser: isUser ?? this.isUser,
+        base64Image: base64Image ?? this.base64Image,
+        time: time ?? this.time);
   }
 
   Parts.fromJson(Map<String, dynamic> json)
       : text = json['text'] as String?,
-        isUser = json['isUser'] as bool?;
+        isUser = json['isUser'] as bool?,
+        time = json['time'] as String?,
+        base64Image = json['base64Image'] as String?;
 
-  Map<String, dynamic> toJson() => {'text': text, 'isUser': isUser};
+  Map<String, dynamic> toJson() => {
+        'text': text,
+        'isUser': isUser,
+        'base64Image': base64Image,
+        'time': time
+      };
 }
 
 class UsageMetadata {

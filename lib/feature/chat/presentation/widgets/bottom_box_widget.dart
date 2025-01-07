@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import '../../../../core/common/popup/pick_image_popup.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/textstyles.dart';
 import '../bloc/chat_bloc.dart';
@@ -271,6 +272,23 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
     setState(() {});
   }
 
+  String? imageUrl;
+  Future<void> setProfileImage() async {
+    await showModelBottomSheet(
+        context: context,
+        imageFile: (File image) {
+          setState(() {
+            _selectedImage = image;
+          });
+          if (_selectedImage != null && mounted) {
+            log("API Called");
+            context
+                .read<UploadImageBloc>()
+                .add(UploadImageToGemini(image: _selectedImage!.path));
+          }
+        });
+  }
+
   void _startListening() async {
     await _speechToText.listen(
       onResult: _onSpeechResult,
@@ -420,7 +438,7 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                           children: [
                             if (_selectedImage == null)
                               GestureDetector(
-                                onTap: _pickImage, // Trigger image picker
+                                onTap: setProfileImage, // Trigger image picker
                                 child: Container(
                                   margin: EdgeInsets.only(right: 8.w, top: 6.h),
                                   height: 35.h,
@@ -440,59 +458,87 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                             BlocBuilder<ChatBloc, ChatState>(
                               builder: (context, state) {
                                 if (state is ChatLoaded) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      if (isMic) {
-                                        setState(() {
-                                          isListen = true;
-                                        });
-                                        _speechToText.isNotListening
-                                            ? _startListening()
-                                            : _stopListening();
-                                      } else {
-                                        context.read<ChatBloc>().add(
-                                            ChatRequest(
-                                                isNewChat: state.isNewChat,
-                                                msg: widget.msg.text.trim(),
-                                                date: state.data.date!));
-                                        widget.msg.clear();
-                                        widget.scroll();
-                                        setState(() {
-                                          isMic = true;
-                                        });
-                                      }
-                                      setState(() {
-                                        _selectedImage = null;
-                                      });
-                                    },
-                                    child: Container(
-                                      margin:
-                                          EdgeInsets.only(right: 8.w, top: 6.h),
-                                      height: 35.h,
-                                      width: 35.h,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.kColorBlue,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: !isMic || _selectedImage != null
-                                            ? Icon(
-                                                Icons.send,
-                                                color: AppColors.kColorWhite,
-                                              )
-                                            : isListen
+                                  final isNewChat = state.isNewChat;
+                                  final date = state.data.date;
+                                  return BlocBuilder<UploadImageBloc,
+                                      UploadImageState>(
+                                    builder: (context, state) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          log("API CALLED FOR MSG : $isMic");
+                                          if (isMic) {
+                                            setState(() {
+                                              isListen = true;
+                                            });
+                                            _speechToText.isNotListening
+                                                ? _startListening()
+                                                : _stopListening();
+                                          } else {
+                                            log("API CALLED FOR MSG");
+                                            if (_selectedImage != null &&
+                                                state is UploadImageSuccess) {
+                                              context.read<ChatBloc>().add(
+                                                  ImageResponseReq(
+                                                      imagePath:
+                                                          _selectedImage!.path,
+                                                      date: date!,
+                                                      imageUrl: state
+                                                          .model.file1!.uri!,
+                                                      msg: widget.msg.text
+                                                          .trim(),
+                                                      mimeType: state.model
+                                                          .file1!.mimeType!,
+                                                      isNewChat: isNewChat));
+                                            } else {
+                                              context.read<ChatBloc>().add(
+                                                  ChatRequest(
+                                                      isNewChat: isNewChat,
+                                                      msg: widget.msg.text
+                                                          .trim(),
+                                                      date: date!));
+
+                                              widget.scroll();
+                                              setState(() {
+                                                isMic = true;
+                                              });
+                                            }
+                                          }
+                                          widget.msg.clear();
+                                          setState(() {
+                                            _selectedImage = null;
+                                          });
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                              right: 8.w, top: 6.h),
+                                          height: 35.h,
+                                          width: 35.h,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.kColorBlue,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Center(
+                                            child: !isMic
                                                 ? Icon(
-                                                    Icons.mic,
+                                                    Icons.send,
                                                     color:
                                                         AppColors.kColorWhite,
                                                   )
-                                                : Icon(
-                                                    Icons.mic_off,
-                                                    color:
-                                                        AppColors.kColorWhite,
-                                                  ),
-                                      ),
-                                    ),
+                                                : isListen
+                                                    ? Icon(
+                                                        Icons.mic,
+                                                        color: AppColors
+                                                            .kColorWhite,
+                                                      )
+                                                    : Icon(
+                                                        Icons.mic_off,
+                                                        color: AppColors
+                                                            .kColorWhite,
+                                                      ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 }
                                 return SizedBox();

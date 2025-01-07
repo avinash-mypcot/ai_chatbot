@@ -68,6 +68,8 @@ class FirebaseChatApi {
             content: model.candidates![0].content!.copyWith(parts: [
           for (var part in model.candidates![0].content!.parts!)
             Parts(
+              time: part.time,
+              base64Image: part.base64Image,
               isUser: part.isUser,
               text: encryptionHelper.decryptText(part.text!),
             )
@@ -112,18 +114,33 @@ class FirebaseChatApi {
         // Append new parts to the existing parts in Firestore
         if (isNewChat) {
           final leng = docSnapshot.data()!['chats'].length;
-          List<dynamic> oldData = docSnapshot.data()!['chats'];
-          log("OLDDSTA ${oldData.runtimeType}");
-          oldData.add({
-            'candidates': [
-              {
-                'content': {'parts': newParts},
-              }
-            ]
-          });
-          await docRef.update({
-            'chats': oldData,
-          });
+          if (docSnapshot.data()!['chats'].runtimeType == List<dynamic>) {
+            List<dynamic> oldData = docSnapshot.data()!['chats'];
+            log("OLDDSTA ${oldData.runtimeType}");
+            oldData.add({
+              'candidates': [
+                {
+                  'content': {'parts': newParts},
+                }
+              ]
+            });
+            await docRef.update({
+              'chats': oldData,
+            });
+          } else {
+            Map<String, dynamic> oldData = docSnapshot.data()!['chats'];
+            log("OLDDSTA ${oldData.runtimeType}");
+            oldData.addAll({
+              'candidates': [
+                {
+                  'content': {'parts': newParts},
+                }
+              ]
+            });
+            await docRef.update({
+              'chats.$leng': oldData,
+            });
+          }
         } else {
           final leng = docSnapshot.data()!['chats'].length;
           await docRef.update({

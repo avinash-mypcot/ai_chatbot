@@ -6,6 +6,7 @@ class AppColors {
   static const Color kColorGrey = Colors.grey;
   static const Color kColorBlue = Colors.blueAccent;
   static const Color kColored = Color(0xFFCE0E0E);
+  static const Color kColorTransparent = Colors.transparent;
 
   //Logging
   static const String reset = '\x1B[0m';

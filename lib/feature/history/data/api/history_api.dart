@@ -73,7 +73,7 @@ class HistoryApi {
       // Map Firestore data to HistoryModel
       final List<Data> fetchedData = snapshot.docs.map((doc) {
         var data = doc.data();
-        log('DATA : $data');
+        // log('DATA : $data');
 
         // Initialize chats as an empty list
         List<ChatModel> chats = [];
@@ -81,7 +81,12 @@ class HistoryApi {
         if (data['chats'] is List<dynamic>) {
           // Handle case when data['chats'] is a list
           chats = (data['chats'] as List<dynamic>).map((chat) {
-            final contentJson = chat['candidates'][0]['content'];
+            final contentJson;
+            if (chat['candidates'].runtimeType == List<dynamic>) {
+              contentJson = chat['candidates'][0]['content'];
+            } else {
+              contentJson = chat['candidates']['0']['content'];
+            }
             final content = Content.fromJson(contentJson);
 
             // Extract parts
@@ -101,6 +106,7 @@ class HistoryApi {
                   content: model.candidates![0].content!.copyWith(parts: [
                 for (var part in model.candidates![0].content!.parts!)
                   Parts(
+                    base64Image: part.base64Image,
                     isUser: part.isUser,
                     text: encryptionHelper.decryptText(part.text!),
                   )
@@ -109,12 +115,20 @@ class HistoryApi {
 
             return dencryptedModel;
           }).toList();
-        } else {
+        } else if (data['chats'] is Map<String, dynamic>) {
           // Handle case when data['chats'] is a map
           final mapChats = data['chats'] as Map<String, dynamic>;
+          for (int i = 0; i < mapChats.length; i++) {}
           chats = mapChats.entries.map((entry) {
             final chat = entry.value;
-            final contentJson = chat['candidates']['0']['content'];
+            final contentJson;
+            if (chat['candidates'].runtimeType == List<dynamic>) {
+              contentJson = chat['candidates'][0]['content'];
+            } else {
+              contentJson = chat['candidates']['0']['content'];
+            }
+
+            // log("DATA 1: ${contentJson['parts']}");
             final content = Content.fromJson(contentJson);
 
             // Extract parts
@@ -122,12 +136,27 @@ class HistoryApi {
             final dateTime = (data['date'] as Timestamp).toDate();
             final formattedDate = DateFormat('yyyy-MM-dd').format(dateTime);
 
-            return ChatModel(
+            final model = ChatModel(
               date: formattedDate,
               candidates: [
                 Candidates(content: Content(parts: parts), date: formattedDate),
               ],
             );
+            log("DATA : ${model.date}");
+            ChatModel dencryptedModel = model.copyWith(candidates: [
+              model.candidates![0].copyWith(
+                  content: model.candidates![0].content!.copyWith(parts: [
+                for (var part in model.candidates![0].content!.parts!)
+                  Parts(
+                    time: part.time,
+                    base64Image: part.base64Image,
+                    isUser: part.isUser,
+                    text: encryptionHelper.decryptText(part.text!),
+                  )
+              ]))
+            ]);
+
+            return dencryptedModel;
           }).toList();
         }
 

@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mockito/mockito.dart';
 import '../theme/app_colors.dart';
 
@@ -32,6 +37,34 @@ class AppUtils{
         return handler.next(e);
       },
     );
+  }
+  static Future<String> convertImageToBase64(String imagePath) async {
+    // Read the image file
+    File imageFile = File(imagePath);
+
+    // Convert to bytes
+    List<int> imageBytes = await imageFile.readAsBytes();
+
+    // Encode to Base64
+    String base64String = base64Encode(imageBytes);
+
+    return base64String;
+  }
+  static Widget decodeBase64ToImage(String base64String) {
+    // Decode the Base64 string to bytes
+    Uint8List decodedBytes = base64Decode(base64String);
+
+    // Return as an Image widget
+    return Image.memory(decodedBytes);
+  }
+  // pick image from gallary
+
+  static Future<File?> pickImage(bool fromGallery) async {
+    final image = await ImagePicker().pickImage(
+        source: fromGallery ? ImageSource.gallery : ImageSource.camera,
+        requestFullMetadata: false);
+
+    return image != null ? File(image.path) : null;
   }
 
 }

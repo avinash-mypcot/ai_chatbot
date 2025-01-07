@@ -1,5 +1,6 @@
 import 'package:ai_chatbot/core/theme/app_colors.dart';
 import 'package:ai_chatbot/core/theme/textstyles.dart';
+import 'package:ai_chatbot/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -7,12 +8,14 @@ class MessageWidget extends StatefulWidget {
   final bool isUser;
   final String message;
   final String date;
+  final String? image;
 
   const MessageWidget(
       {super.key,
       required this.isUser,
       required this.message,
-      required this.date});
+      required this.date,
+      this.image});
 
   @override
   State<MessageWidget> createState() => _MessageWidgetState();
@@ -47,6 +50,8 @@ class _MessageWidgetState extends State<MessageWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (widget.image != null)
+                  AppUtils.decodeBase64ToImage(widget.image!),
                 Text(
                   widget.isUser
                       ? widget.message

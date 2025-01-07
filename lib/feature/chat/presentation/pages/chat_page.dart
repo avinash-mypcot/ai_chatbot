@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ai_chatbot/core/constants/app_icons.dart';
 import 'package:ai_chatbot/core/theme/app_colors.dart';
 import 'package:ai_chatbot/core/theme/textstyles.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/common/popup/pick_image_popup.dart';
 import '../widgets/bottom_box_widget.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
@@ -52,6 +55,7 @@ class _ChatPageState extends State<ChatPage> {
       }
     });
   }
+
 
   @override
   void initState() {
@@ -129,11 +133,14 @@ class _ChatPageState extends State<ChatPage> {
                                   .parts![index].text;
 
                               return MessageWidget(
+                                image: state.data.candidates![0].content!
+                                    .parts![index].base64Image,
                                 isUser: state.data.candidates![0].content!
                                         .parts![index].isUser ??
                                     false,
                                 message: message!,
-                                date:
+                                date: state.data.candidates![0].content!
+                                        .parts![index].time ??
                                     DateFormat('HH:mm').format(DateTime.now()),
                               );
                             },

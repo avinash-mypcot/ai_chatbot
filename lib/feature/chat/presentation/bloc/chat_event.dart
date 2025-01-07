@@ -37,3 +37,15 @@ class NewChatEvent extends ChatEvent {
   @override
   List<Object> get props => [];
 }
+class ImageResponseReq extends ChatEvent {
+  final String imagePath;
+  final String imageUrl;
+  final String msg;
+  final String mimeType;
+  final String date;
+  final bool isNewChat;
+  const ImageResponseReq({required this.imagePath,required this.imageUrl, required this.msg,required this.mimeType,required this.date,required this.isNewChat});
+
+  @override
+  List<Object> get props => [imageUrl, msg,mimeType,imagePath,date,isNewChat];
+}

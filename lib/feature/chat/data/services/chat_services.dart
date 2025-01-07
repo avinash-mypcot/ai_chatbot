@@ -28,6 +28,7 @@ class ChatServices {
   Future<UploadImageModel> uploadImageToGemini(
       String key, FormData data) async {
     try {
+      _dio.interceptors.add(AppUtils.getLoggingInterceptor());
       final res = await _api.uploadImage(
           key: 'AIzaSyDaKc-H4hWesxWJt6ARDVz7rYcBn0ILUQw', data: data);
       return res;
