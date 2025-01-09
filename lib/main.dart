@@ -19,8 +19,7 @@ void main() async {
   );
   initDependency();
   runApp(MultiBlocProvider(
-     
-     
+    
     providers: [
       BlocProvider(
         create: (context) => serviceLocator<ChatBloc>(),
