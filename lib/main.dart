@@ -11,6 +11,7 @@ import 'feature/chat/presentation/bloc/upload_image_bloc/upload_image_bloc.dart'
 import 'feature/history/presentation/bloc/history_bloc.dart';
 import 'feature/profile/presentation/bloc/profile_bloc.dart';
 import 'firebase_options.dart';
+import 'package:flutter/src/widgets/binding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +46,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+   MyApp({super.key});
   final _appRouter = AppRouter();
   @override
   Widget build(BuildContext context) {
