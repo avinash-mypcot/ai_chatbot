@@ -3,6 +3,9 @@ allprojects {
         google()
         mavenCentral()
     }
+       dependencies {
+        classpath 'com.google.firebase:firebase-appdistribution-gradle:3.2.0'
+    }
 }
 
 rootProject.buildDir = "../build"
