@@ -39,6 +39,10 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# Ignore the specific JSON file
+ai_chatbot/ai-chat-bot-d574b-0d461d1c951b.json
+
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile

@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {
+        GOOGLE_APPLICATION_CREDENTIALS = 'G:\\Flutter Projects\\jenkins_distribution\\jenkins-distribution-credential.json' 
+    } // Here add your jenkins-distribution-credential.json file path
     stages {
         stage('Git Pull') {
             steps {
@@ -21,6 +23,12 @@ pipeline {
             steps {
                 // Building the APK in release mode
                 sh 'flutter build apk'
+            }
+        }
+        stage ('Distribute') {
+            steps {
+        // Running the Gradle commands with the environment variable set
+                 bat 'cd android && gradlew.bat assembleRelease appDistributionUploadRelease'
             }
         }
         
