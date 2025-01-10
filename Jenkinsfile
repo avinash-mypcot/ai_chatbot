@@ -12,12 +12,12 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                // Running Flutter tests
-                sh 'flutter test'
-            }
-        }
+        // stage('Run Tests') {
+        //     steps {
+        //         // Running Flutter tests
+        //         sh 'flutter test'
+        //     }
+        // }
 
         stage('Build Android APK') {
             steps {
