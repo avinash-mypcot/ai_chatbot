@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('git pull') {
+        stage('Git Pull') {
             steps {
                 // Cloning the repository from GitHub
                 git url: 'https://github.com/avinash-mypcot/ai_chatbot.git',
@@ -13,14 +13,14 @@ pipeline {
         stage('Run Tests') {
             steps {
                 // Running Flutter tests
-                bat 'flutter test'
+                sh 'flutter test'
             }
         }
 
         stage('Build Android APK') {
             steps {
                 // Building the APK in release mode
-                bat 'flutter build apk'
+                sh 'flutter build apk'
             }
         }
         
