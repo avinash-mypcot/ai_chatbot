@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/common/popup/pick_image_popup.dart';
 import '../widgets/bottom_box_widget.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
@@ -94,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
             SizedBox(
               width: 12.w,
             ),
-          ],
+          ], 
         ),
         body: Stack(
           children: [

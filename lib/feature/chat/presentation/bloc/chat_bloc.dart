@@ -7,9 +7,32 @@ import 'package:intl/intl.dart';
 import '../../../../core/utils/utils.dart';
 import '../../data/repository/chat_repository.dart';
 import '../../data/services/encription_helper.dart';
+import 'package:home_widget/home_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
+
+Future<void> _updateHomeWidget(ChatModel chatModel) async {
+  // Extract the latest message
+  final latestMessage =
+      chatModel.candidates?[0].content?.parts?.last.text ?? '';
+  // Save the latest message in SharedPreferences
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('latest_message', latestMessage);
+  final msgStore = await prefs.getString('latest_message');
+  await prefs.reload();
+  // Update Home Widget data
+  log("Response $msgStore");
+  await HomeWidget.saveWidgetData<String>('latest_message', latestMessage);
+
+  // Trigger the widget update
+  final res = await HomeWidget.updateWidget(
+    name: 'MyWidgetProvider',
+    androidName: 'MyWidgetProvider',
+  );
+  log("Response $res");
+}
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   HomeRepository repository;
@@ -235,6 +258,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         firebaseRepository.appendPartsToFirestore(
             encryptedModel, event.date, event.isNewChat);
 
+        // Update Home Widget
+        await _updateHomeWidget(updatedModel);
         log("date ${updatedModel.date}");
         emit(ChatLoaded(
           isNewChat: event.isNewChat,

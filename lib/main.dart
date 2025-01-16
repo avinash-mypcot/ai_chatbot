@@ -1,7 +1,4 @@
-import 'dart:io';
-import 'dart:math';
 import 'package:ai_chatbot/feature/init_dependencies.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +19,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-   await HomeWidget.setAppGroupId('group.es.antonborri.homeWidgetCounter');
+  await HomeWidget.setAppGroupId('group.es.antonborri.homeWidgetCounter');
   // Register an Interactivity Callback. It is necessary that this method is static and public
   // await HomeWidget.registerInteractivityCallback(interactiveCallback);
   // Workmanager().initialize(callbackDispatcher, isInDebugMode: kDebugMode);
