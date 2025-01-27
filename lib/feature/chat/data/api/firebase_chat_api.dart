@@ -83,8 +83,7 @@ class FirebaseChatApi {
     }
   }
 
-  Future<void> appendPartsToFirestore(ChatModel chatModel, String documentId,
-      {bool isNewChat = false}) async {
+  Future<void> appendPartsToFirestore(ChatModel chatModel, String documentId,int index,{bool isNewChat = false}) async {
     try {
       // Initialize Firestore instance
       final firestore = FirebaseFirestore.instance;
@@ -144,7 +143,7 @@ class FirebaseChatApi {
         } else {
           final leng = docSnapshot.data()!['chats'].length;
           await docRef.update({
-            'chats.0.candidates.0.content.parts':
+            'chats.$index.candidates.0.content.parts':
                 FieldValue.arrayUnion(newParts),
           });
         }

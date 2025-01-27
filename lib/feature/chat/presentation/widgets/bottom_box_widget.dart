@@ -460,6 +460,7 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                                 if (state is ChatLoaded) {
                                   final isNewChat = state.isNewChat;
                                   final date = state.data.date;
+                                  final index = state.index;
                                   return BlocBuilder<UploadImageBloc,
                                       UploadImageState>(
                                     builder: (context, state) {
@@ -479,6 +480,7 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                                                 state is UploadImageSuccess) {
                                               context.read<ChatBloc>().add(
                                                   ImageResponseReq(
+                                                    index: index,
                                                       imagePath:
                                                           _selectedImage!.path,
                                                       date: date!,
@@ -488,11 +490,12 @@ class _BottomBoxWidgetState extends State<BottomBoxWidget> {
                                                           .trim(),
                                                       mimeType: state.model
                                                           .file1!.mimeType!,
-                                                      isNewChat: isNewChat));
+                                                      isNewChat: isNewChat));   
                                             } else {
                                               context.read<ChatBloc>().add(
                                                   ChatRequest(
                                                       isNewChat: isNewChat,
+                                                      index: index,
                                                       msg: widget.msg.text
                                                           .trim(),
                                                       date: date!));

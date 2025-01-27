@@ -69,6 +69,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 return GestureDetector(
                                   onTap: () {
                                     context.read<ChatBloc>().add(ChatHistory(
+                                      index: index1,
                                         model: state.model.data![index].date!
                                             .chats![index1]));
                                   },

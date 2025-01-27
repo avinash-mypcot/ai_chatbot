@@ -16,9 +16,9 @@ class FirebaseRepository {
     }
   }
 
-   Future<void> appendPartsToFirestore(ChatModel updatedModel,String date,bool isNewChat) async {
+   Future<void> appendPartsToFirestore(ChatModel updatedModel,String date,bool isNewChat,int index) async {
     try {
-      final response = await _services.appendPartsToFirestore(updatedModel, date,isNewChat);
+      final response = await _services.appendPartsToFirestore(updatedModel, date,isNewChat,index);
       return response;
     } catch (e) {
       rethrow;

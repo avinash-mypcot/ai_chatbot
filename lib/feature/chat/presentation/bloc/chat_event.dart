@@ -8,21 +8,23 @@ sealed class ChatEvent extends Equatable {
 }
 
 class ChatRequest extends ChatEvent {
-  const ChatRequest({required this.msg, required this.date,this.isNewChat=false});
+  const ChatRequest({required this.msg, required this.date,this.isNewChat=false,required this.index});
   final String msg;
   final String date;
   final bool isNewChat;
+  final int index;
 
   @override
-  List<Object> get props => [msg,date,isNewChat];
+  List<Object> get props => [msg,date,isNewChat,index];
 }
 
 class ChatHistory extends ChatEvent {
-  const ChatHistory({required this.model});
+  const ChatHistory({required this.model,required this.index});
   final ChatModel model;
+  final int index;
 
   @override
-  List<Object> get props => [model];
+  List<Object> get props => [model,index];
 }
 
 class GetTodayChat extends ChatEvent {
@@ -44,7 +46,8 @@ class ImageResponseReq extends ChatEvent {
   final String mimeType;
   final String date;
   final bool isNewChat;
-  const ImageResponseReq({required this.imagePath,required this.imageUrl, required this.msg,required this.mimeType,required this.date,required this.isNewChat});
+  final int index;
+  const ImageResponseReq({required this.imagePath,required this.imageUrl, required this.msg,required this.mimeType,required this.date,required this.isNewChat,required this.index});
 
   @override
   List<Object> get props => [imageUrl, msg,mimeType,imagePath,date,isNewChat];

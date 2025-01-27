@@ -17,9 +17,9 @@ class FirebaseServices {
   }
 
   Future<void> appendPartsToFirestore(
-      ChatModel updatedModel, String date, bool isNewChat) async {
+      ChatModel updatedModel, String date, bool isNewChat,int index) async {
     try {
-      var res = await _api.appendPartsToFirestore(updatedModel, date,isNewChat:isNewChat);
+      var res = await _api.appendPartsToFirestore(updatedModel, date,index,isNewChat:isNewChat);
       return res;
     } catch (e) {
       rethrow;

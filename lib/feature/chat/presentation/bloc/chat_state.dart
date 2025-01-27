@@ -18,11 +18,12 @@ class ChatLoading extends ChatState {
 }
 
 class ChatLoaded extends ChatState {
-  const ChatLoaded({required this.data,this.isNewChat=false});
+  const ChatLoaded({required this.data,this.isNewChat=false,this.index=0});
   final ChatModel data;
   final bool isNewChat;
+  final int index;
   @override
-  List<Object> get props => [data,isNewChat];
+  List<Object> get props => [data,isNewChat,index];
 }
 
 class ChatException extends ChatState {

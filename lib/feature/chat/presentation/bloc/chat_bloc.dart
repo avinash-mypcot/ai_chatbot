@@ -139,7 +139,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
         // Append the encrypted model to Firebase
         firebaseRepository.appendPartsToFirestore(
-            encryptedModel, event.date, event.isNewChat);
+            encryptedModel, event.date, event.isNewChat,0);
 
         log("date ${updatedModel.date}");
         emit(ChatLoaded(
@@ -177,7 +177,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   _onSetHistoryRequest(ChatHistory event, Emitter<ChatState> emit) async {
-    emit(ChatLoaded(data: event.model));
+    emit(ChatLoaded(data: event.model,index:event.index));
   }
 
   _onMassageRequest(ChatRequest event, Emitter<ChatState> emit) async {
@@ -257,7 +257,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
         // Append the encrypted model to Firebase
         firebaseRepository.appendPartsToFirestore(
-            encryptedModel, event.date, event.isNewChat);
+            encryptedModel, event.date, event.isNewChat,event.index);
 
         // Update Home Widget
         await _updateHomeWidget(updatedModel);
