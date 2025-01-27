@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +23,16 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+
+  String? getUserEmail() {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // The user is logged in, retrieve the email
+      return user.email;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         _emailController.text.isEmpty) {
                       _nameController.text = state.model.name;
                       _mobileController.text = state.model.mobile;
-                      _emailController.text = state.model.email;
+                      _emailController.text = getUserEmail()!;
                     }
 
                     return Form(
@@ -126,6 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 12,
                           ),
                           ProfileTextfieldWidget(
+                              isReadOnly: true,
                               formKey: _key,
                               nameController: _emailController,
                               textHint: 'Enter Email Address'),

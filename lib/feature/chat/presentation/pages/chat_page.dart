@@ -6,6 +6,7 @@ import 'package:ai_chatbot/core/theme/textstyles.dart';
 import 'package:ai_chatbot/feature/chat/presentation/bloc/chat_bloc.dart';
 import 'package:ai_chatbot/feature/chat/presentation/widgets/drawer_widget.dart';
 import 'package:ai_chatbot/feature/chat/presentation/widgets/massege_widget.dart';
+import 'package:ai_chatbot/feature/chat/presentation/widgets/message_shimmer_widget.dart';
 import 'package:ai_chatbot/feature/profile/presentation/bloc/profile_bloc.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,6 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-
   @override
   void initState() {
     context.read<ChatBloc>().add(GetTodayChat());
@@ -93,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
             SizedBox(
               width: 12.w,
             ),
-          ], 
+          ],
         ),
         body: Stack(
           children: [
@@ -143,6 +143,13 @@ class _ChatPageState extends State<ChatPage> {
                                     DateFormat('HH:mm').format(DateTime.now()),
                               );
                             },
+                          );
+                        } else if (state is ChatLoading) {
+                          return MessageShimmerWidget(
+                            isUser: true,
+                            message: "message",
+                            date: "date",
+                            isLoading: true,
                           );
                         }
                         return SizedBox();

@@ -50,6 +50,7 @@ class TextFields extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         SignupTextfield(
+          isPasswordField: true,
           nameController: _passController,
           textHint: 'Enter Password',
           validation: (value) {

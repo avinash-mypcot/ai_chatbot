@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
-
+// https://generativelanguage.googleapis.com/v1beta/files/56qyegb7ljfa
 Future<void> _updateHomeWidget(ChatModel chatModel) async {
   // Extract the latest message
   final latestMessage =
@@ -28,8 +28,8 @@ Future<void> _updateHomeWidget(ChatModel chatModel) async {
 
   // Trigger the widget update
   final res = await HomeWidget.updateWidget(
-    name: 'MyWidgetProvider',
-    androidName: 'MyWidgetProvider',
+    name: 'MyWidgetProvider1',
+    androidName: 'MyWidgetProvider1',
   );
   log("Response $res");
 }
@@ -166,8 +166,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onGetTodayChat(
       GetTodayChat event, Emitter<ChatState> emit) async {
     try {
+      emit(ChatLoading());
       final res = await firebaseRepository.getTodayChat();
-      // log(res.candidates![0].content!.parts!.first.base64Image!);
+      // // log(res.candidates![0].content!.parts!.first.base64Image!);
       emit(ChatLoaded(data: res));
     } catch (e) {
       log("Error: $e");

@@ -183,7 +183,6 @@ class DrawerWidget extends StatelessWidget {
                                 builder: (context) {
                                   return LogoutPopup();
                                 });
-                            context.router.maybePop();
                           },
                           child: Container(
                             margin: EdgeInsets.only(left: 12.w),

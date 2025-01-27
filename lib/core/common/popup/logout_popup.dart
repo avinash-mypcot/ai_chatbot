@@ -93,7 +93,7 @@ class _LogoutPopupState extends State<LogoutPopup> {
                   child: GestureDetector(
                     onTap: () {
                       FirebaseAuth.instance.signOut();
-                      context.router.popAndPushAll([SignInRoute()]);
+                      context.router.replaceAll([SignInRoute()]);
                     },
                     child: Container(
                       padding: EdgeInsets.all(10.sp),

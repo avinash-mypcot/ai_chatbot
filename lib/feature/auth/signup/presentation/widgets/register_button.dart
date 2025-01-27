@@ -29,6 +29,7 @@ class RegisterButton extends StatelessWidget {
           context.read<SignUpBloc>().add(SignupReqEvent(
               email: _emailController.text, password: _passController.text));
         }
+        FocusScope.of(context).unfocus();
       },
       child: Container(
         padding: EdgeInsets.all(12.sp),

@@ -36,13 +36,15 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(
             height: double.infinity,
             color: AppColors.kColorBlack.withOpacity(0.85),
             child: Padding(
-              padding: EdgeInsets.all(16.0.sp),
+              padding: EdgeInsets.fromLTRB(16.0.sp, 16.0.sp, 16.0.sp,
+                  MediaQuery.of(context).viewInsets.bottom),
               child: Center(
                 child: SingleChildScrollView(
                   child: Form(
@@ -83,6 +85,7 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                         SizedBox(height: 8.h),
                         SigninTextfield(
+                          isPasswordField: true,
                           nameController: _passController,
                           textHint: 'Enter Password',
                           validation: (value) {
@@ -99,6 +102,8 @@ class _SignInPageState extends State<SignInPage> {
                               context.read<SigninBloc>().add(SigninReqEvent(
                                   email: _emailController.text,
                                   password: _passController.text));
+
+                              FocusScope.of(context).unfocus();
                             }
                           },
                           child: Container(
@@ -162,7 +167,7 @@ class _SignInPageState extends State<SignInPage> {
               return SizedBox();
             },
             listener: (context, state) {
-              if (state is SigninException) {
+              if (state is SigninFailed) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.errorMessage)),
                 );

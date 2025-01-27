@@ -8,6 +8,7 @@ class ProfileTextfieldWidget extends StatelessWidget {
   const ProfileTextfieldWidget(
       {super.key,
       required TextEditingController nameController,
+      this.isReadOnly = false,
       required this.formKey,
       required String textHint})
       : _nameController = nameController,
@@ -16,6 +17,7 @@ class ProfileTextfieldWidget extends StatelessWidget {
   final TextEditingController _nameController;
   final String _textHint;
   final Key formKey;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class ProfileTextfieldWidget extends StatelessWidget {
         }
         return null;
       },
+      readOnly: isReadOnly,
       controller: _nameController,
       cursorColor: AppColors.kColorWhite,
       cursorHeight: 16.h,

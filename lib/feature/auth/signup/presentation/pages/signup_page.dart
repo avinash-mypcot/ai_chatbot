@@ -34,13 +34,15 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(
             height: double.infinity,
             color: AppColors.kColorBlack.withOpacity(0.85),
             child: Padding(
-              padding: EdgeInsets.all(16.0.sp),
+              padding: EdgeInsets.fromLTRB(16.0.sp, 16.0.sp, 16.0.sp,
+                  MediaQuery.of(context).viewInsets.bottom),
               child: Center(
                 child: SingleChildScrollView(
                   child: Form(
