@@ -92,6 +92,7 @@ class DrawerWidget extends StatelessWidget {
                               ),
                               child: GestureDetector(
                                 onTap: () {
+                                   context.router.push(ProfileRoute());
                                   context
                                       .read<ProfileBloc>()
                                       .add(ProfileGetEvent());

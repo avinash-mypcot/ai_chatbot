@@ -1,10 +1,12 @@
 
 
+
 import '../api/signup_api.dart';
 import '../model/signup_model.dart';
 
 class SignUpServices {
   final SignUpApi _api;
+
   const SignUpServices(this._api);
  
 

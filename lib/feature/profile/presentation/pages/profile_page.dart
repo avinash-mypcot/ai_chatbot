@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/textstyles.dart';
 import '../bloc/profile_bloc.dart';
@@ -25,7 +26,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   String? getUserEmail() {
-    final user = FirebaseAuth.instance.currentUser;
+    // final user = FirebaseAuth.instance.currentUser;
+    final user = Supabase.instance.client.auth.currentUser;
 
     if (user != null) {
       // The user is logged in, retrieve the email

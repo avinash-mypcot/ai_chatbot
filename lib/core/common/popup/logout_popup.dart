@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../router/app_router.gr.dart';
 import '../../theme/app_colors.dart';
@@ -92,7 +93,8 @@ class _LogoutPopupState extends State<LogoutPopup> {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      FirebaseAuth.instance.signOut();
+                      // FirebaseAuth.instance.signOut();
+                      Supabase.instance.client.auth.signOut();
                       context.router.replaceAll([SignInRoute()]);
                     },
                     child: Container(

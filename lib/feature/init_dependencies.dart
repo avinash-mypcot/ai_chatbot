@@ -25,5 +25,6 @@ import 'auth/signin/data/repository/signin_repository.dart';
 import 'auth/signin/data/services/signin_services.dart';
 import 'auth/signin/presentation/bloc/signin_bloc.dart';
 import 'auth/signup/presentation/bloc/signup_bloc.dart';
+import 'chat/data/api/supabase_chat_api.dart';
 import 'chat/presentation/bloc/upload_image_bloc/upload_image_bloc.dart';
 part 'init_dependencies_main.dart';

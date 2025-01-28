@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/router/app_router.dart';
 import 'feature/auth/signin/presentation/bloc/signin_bloc.dart';
 import 'feature/auth/signup/presentation/bloc/signup_bloc.dart';
@@ -20,9 +21,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await HomeWidget.setAppGroupId('group.es.antonborri.homeWidgetCounter');
-  // Register an Interactivity Callback. It is necessary that this method is static and public
-  // await HomeWidget.registerInteractivityCallback(interactiveCallback);
-  // Workmanager().initialize(callbackDispatcher, isInDebugMode: kDebugMode);
+  await Supabase.initialize(
+    url: "https://xxiqqggvruviwczcsxpt.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4aXFxZ2d2cnV2aXdjemNzeHB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgwNDczNDYsImV4cCI6MjA1MzYyMzM0Nn0.qr6dOhtZKbseyID9unRHK80D01ZqrSSD4PvSQesNn2c",
+  );
+  
   initDependency();
   runApp(MultiBlocProvider(
     providers: [

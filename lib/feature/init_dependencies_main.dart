@@ -49,7 +49,8 @@ _initChat() {
   serviceLocator
     //Api
     ..registerLazySingleton(() => ChatApi(serviceLocator()))
-    ..registerLazySingleton(() => FirebaseChatApi())
+    // ..registerLazySingleton(() => FirebaseChatApi())
+    ..registerLazySingleton(() => SupabaseChatApi())
     //Services
     ..registerLazySingleton(
         () => ChatServices(api: serviceLocator(), dio: serviceLocator()))
