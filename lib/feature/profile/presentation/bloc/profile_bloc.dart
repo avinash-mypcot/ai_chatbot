@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ai_chatbot/feature/profile/data/model/profile_model.dart';
 import 'package:ai_chatbot/feature/profile/data/repository/profile_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -19,6 +21,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       emit(ProfileLoadedState(model: response));
     } catch (e) {
+      log("Exception : $e");
       emit(ProfileFailedState());
     }
   }

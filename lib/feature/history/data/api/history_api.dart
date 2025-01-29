@@ -2,9 +2,8 @@ import 'dart:developer';
 
 import 'package:ai_chatbot/feature/chat/data/model/chat_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../chat/data/services/encription_helper.dart';
 import '../model/history_model.dart';
 
@@ -57,7 +56,8 @@ class HistoryApi {
   // }
 
   Future<HistoryModel> getHistory() async {
-    final uId = FirebaseAuth.instance.currentUser!.uid;
+    // final uId = FirebaseAuth.instance.currentUser!.uid;
+    final uId = Supabase.instance.client.auth.currentUser!.id;
     final encryptionHelper =
         EncryptionHelper('6gHdJ1kLmNoP8b2x', '3xTu9R4dWq8YtZkC');
 
@@ -69,6 +69,8 @@ class HistoryApi {
           .collection('chats') // Sub-collection for chats
           .orderBy('date', descending: true) // Sort by date
           .get();
+
+      // final response = await Supabase.instance.client.from('chat_models').;
 
       // Map Firestore data to HistoryModel
       final List<Data> fetchedData = snapshot.docs.map((doc) {

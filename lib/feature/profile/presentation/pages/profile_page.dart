@@ -38,6 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.kColorWhite,
       resizeToAvoidBottomInset:
           false, // Ensures the layout adjusts when keyboard appears
       appBar: AppBar(
@@ -179,6 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     );
                   }
+                  
                   return SizedBox();
                 },
               ),
@@ -200,6 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   SnackBar(content: Text("Profile updated successfully")));
             }
           })
+       
         ],
       ),
     );

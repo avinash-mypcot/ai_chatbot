@@ -23,7 +23,7 @@ class SupabaseChatApi {
           .eq('date', todayDate)
           .maybeSingle()
           ;
-
+log("RESPONSE : ${response}");
       if ( response == null) {
         return ChatModel(
           date: todayDate,
@@ -117,11 +117,11 @@ class SupabaseChatApi {
           });
         } else {
           await _supabase.from('chat_models').update({
-            'chats': {
-              'parts': {
-                'array_append': newParts,
+            'chats': [
+               {
+                'candidates': [{'content': {'parts': newParts}}],
               }
-            }
+            ]
           }).eq('user_id', uId).eq('date', documentId);
         }
       }
