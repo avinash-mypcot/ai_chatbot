@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/textstyles.dart';
 import '../../../chat/presentation/bloc/chat_bloc.dart';
+import '../../../code_verification/bloc/code_verification_bloc.dart';
 import '../bloc/history_bloc.dart';
 import '../widgets/chat_card.dart';
 
@@ -20,7 +21,9 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    context.read<HistoryBloc>().add(GetHistoryEvent());
+    final currentState = context.read<CodeVerificationBloc>().state;
+    bool isVerified =currentState == CodeVerified;
+    context.read<HistoryBloc>().add(GetHistoryEvent(isVerified: isVerified));
   }
 
   @override

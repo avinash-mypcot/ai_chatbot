@@ -56,7 +56,7 @@ class HistoryApi {
   //   }
   // }
 
-  Future<HistoryModel> getHistory() async {
+  Future<HistoryModel> getHistory(bool isVerified) async {
     final uId = FirebaseAuth.instance.currentUser!.uid;
     final encryptionHelper =
         EncryptionHelper('6gHdJ1kLmNoP8b2x', '3xTu9R4dWq8YtZkC');
@@ -101,6 +101,9 @@ class HistoryApi {
                 Candidates(content: Content(parts: parts), date: formattedDate),
               ],
             );
+            if(!isVerified){
+                return model;
+            }
             ChatModel dencryptedModel = model.copyWith(candidates: [
               model.candidates![0].copyWith(
                   content: model.candidates![0].content!.copyWith(parts: [

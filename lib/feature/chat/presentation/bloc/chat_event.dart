@@ -28,9 +28,10 @@ class ChatHistory extends ChatEvent {
 }
 
 class GetTodayChat extends ChatEvent {
-  const GetTodayChat();
+  final bool isVerified;
+  const GetTodayChat({required this.isVerified});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [isVerified];
 }
 
 class NewChatEvent extends ChatEvent {

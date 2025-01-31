@@ -2,13 +2,16 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../code_verification/bloc/code_verification_bloc.dart';
 import '../model/chat_model.dart';
 import '../services/encription_helper.dart';
 
 class FirebaseChatApi {
-  Future<ChatModel> getTodayChat() async {
+  Future<ChatModel> getTodayChat(bool isVerified) async {
     final encryptionHelper =
         EncryptionHelper('6gHdJ1kLmNoP8b2x', '3xTu9R4dWq8YtZkC');
     try {
@@ -63,6 +66,7 @@ class FirebaseChatApi {
           Candidates(content: content, date: formattedDate),
         ],
       );
+      if(!isVerified){return model;}
       ChatModel dencryptedModel = model.copyWith(candidates: [
         model.candidates![0].copyWith(
             content: model.candidates![0].content!.copyWith(parts: [

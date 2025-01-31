@@ -167,7 +167,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       GetTodayChat event, Emitter<ChatState> emit) async {
     try {
       emit(ChatLoading());
-      final res = await firebaseRepository.getTodayChat();
+      final res = await firebaseRepository.getTodayChat(event.isVerified);
       // // log(res.candidates![0].content!.parts!.first.base64Image!);
       emit(ChatLoaded(data: res));
     } catch (e) {

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:developer';
 
 import 'package:ai_chatbot/core/constants/app_icons.dart';
 import 'package:ai_chatbot/core/theme/app_colors.dart';
@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../../code_verification/bloc/code_verification_bloc.dart';
+import '../../../code_verification/presentation/pages/code_verification_pages.dart';
 import '../widgets/bottom_box_widget.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
@@ -58,8 +60,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    context.read<ChatBloc>().add(GetTodayChat());
+          
     context.read<ProfileBloc>().add(ProfileGetEvent());
+
     super.initState();
   }
 
@@ -162,7 +165,23 @@ class _ChatPageState extends State<ChatPage> {
                   )
                 ],
               ),
-            ),
+            ),BlocConsumer<CodeVerificationBloc,CodeVerificationState>(
+              builder:(context, state) {
+                if(state is! CodeVerificationFailed && state is! CodeVerified ){
+                  log("State $state");
+                    return CodeVerificationPopup();
+                }
+                 log("State $state");
+                return SizedBox();
+                
+            },
+            listener:(context,state){
+              if(state is CodeVerificationFailed || state is CodeVerified ){
+
+                }else{                }
+            },
+            )
+
           ],
         ),
         drawer: DrawerWidget());

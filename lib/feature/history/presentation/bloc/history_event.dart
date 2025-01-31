@@ -8,5 +8,8 @@ sealed class HistoryEvent extends Equatable {
 }
 
 class GetHistoryEvent extends HistoryEvent{
-  const GetHistoryEvent();
+  const GetHistoryEvent({required this.isVerified});
+  final bool isVerified;
+   @override
+  List<Object> get props => [isVerified];
 }

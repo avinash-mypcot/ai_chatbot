@@ -8,9 +8,9 @@ class HistoryRepository {
       : _services = service,
         super();
 
-  Future<HistoryModel> getHistory() async {
+  Future<HistoryModel> getHistory(isVerified) async {
     try {
-      final response = await _services.getHistory();
+      final response = await _services.getHistory(isVerified);
       return response;
     } catch (e) {
       rethrow;

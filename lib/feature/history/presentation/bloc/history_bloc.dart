@@ -13,9 +13,9 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
         super(HistoryInitial()) {
     on<GetHistoryEvent>(_onGetHistory);
   }
-  _onGetHistory(event, emit) async {
+  _onGetHistory(GetHistoryEvent event, emit) async {
     try {
-      HistoryModel model = await _repository.getHistory();
+      HistoryModel model = await _repository.getHistory(event.isVerified);
       emit(HistoryLoaded(model: model));
     } catch (e) {
       emit(HistoryException(msg: e.toString()));
