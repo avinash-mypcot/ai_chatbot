@@ -21,11 +21,11 @@ class ProfileApi {
     .from('chat_models')
     .select('profile') // Select only the 'profile' column
     .eq('user_id', uId).limit(1) // Ensures only one record is retrieved
-    .single(); 
+    .maybeSingle(); 
       // DocumentSnapshot docSnapshot =
       //     await firestore.collection('chatModels').doc(uId).get();
       log("$response");
-      if (response['profile'] != null ) {
+      if (response !=null &&  response['profile'] != null ) {
         var data = response;
         data = data['profile'];
         // Convert the Firestore document to a ProfileModel

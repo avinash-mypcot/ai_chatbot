@@ -21,8 +21,8 @@ class SupabaseChatApi {
           .select()
           .eq('user_id', uId!)
           .eq('date', todayDate)
-          .maybeSingle()
-          ;
+          .maybeSingle();
+
 log("RESPONSE : ${response}");
       if ( response == null) {
         return ChatModel(
@@ -71,6 +71,7 @@ log("RESPONSE : ${response}");
     }
   }
 
+  
    Future<void> appendPartsToSupabase(ChatModel chatModel, String documentId, int index, {bool isNewChat = false}) async {
     try {
       final currentUser = await _supabase.auth.currentUser;
@@ -107,21 +108,24 @@ log("RESPONSE : ${response}");
       } else {
         // Append new parts to existing chat
         if (isNewChat) {
-          await _supabase.from('chat_models').upsert({
-            'user_id': uId,
-            'date': documentId,
+          log("it is in New chat ");
+          await _supabase.from('chat_models').update({
+           
             'chats': [
               ...response['chats'],
               {'candidates': [{'content': {'parts': newParts}}]}
             ]
-          });
+          }).eq('user_id', uId).eq('date', documentId);
         } else {
-          await _supabase.from('chat_models').update({
-            'chats': [
-               {
+          final data = [...response['chats']];
+          data[index]={
                 'candidates': [{'content': {'parts': newParts}}],
-              }
-            ]
+              };
+              log("DAtA : $data");
+          await _supabase.from('chat_models').update({
+            'chats': 
+              data
+             
           }).eq('user_id', uId).eq('date', documentId);
         }
       }
